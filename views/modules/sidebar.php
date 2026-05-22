@@ -29,10 +29,8 @@
               </div>
               <div class="media-body">
                 <?php
-                  $table = 'employees';
-                  $item = 'empid';
-                  $value = $_SESSION["empid"];
-                  $employee = (new ControllerEmployees)->ctrShowEmployees($item, $value);
+                  $empid = $_SESSION["empid"];
+                  $employee = (new ControllerEmployees)->ctrEmployeeInfo($empid);
                   $employee_name = $employee["fname"].' '.$employee["lname"];
                 ?>
 

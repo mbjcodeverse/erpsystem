@@ -13,18 +13,26 @@ class ModelEmployees{
             $emp_id->execute();
 		    $empid = $emp_id -> fetchAll(PDO::FETCH_ASSOC);
 
-			$stmt = $pdo->prepare("INSERT INTO employees(empid, isactive, lname, fname, mi, bday, gender, address, mobile, idPos, sssno, phino, pagibig, tin, estatus) VALUES (:empid, :isactive, :lname, :fname, :mi, :bday, :gender, :address, :mobile, :idPos, :sssno, :phino, :pagibig, :tin, :estatus)");
+			$empcode = $empid[0]['gen_id'];
+
+			if ($data["bday"] == ''){
+				$bday = null;
+			}else{
+				$bday = $data["bday"];
+			}
+
+			$stmt = $pdo->prepare("INSERT INTO employees(empid, isactive, lname, fname, mi, bday, gender, address, mobile, positioncode, sssno, phino, pagibig, tin, estatus) VALUES (:empid, :isactive, :lname, :fname, :mi, :bday, :gender, :address, :mobile, :positioncode, :sssno, :phino, :pagibig, :tin, :estatus)");
 
 			$stmt->bindParam(":empid", $empid[0]['gen_id'], PDO::PARAM_STR);
 			$stmt->bindParam(":isactive", $data["isactive"], PDO::PARAM_INT);
 			$stmt->bindParam(":lname", $data["lname"], PDO::PARAM_STR);
 			$stmt->bindParam(":fname", $data["fname"], PDO::PARAM_STR);
 			$stmt->bindParam(":mi", $data["mi"], PDO::PARAM_STR);
-			$stmt->bindParam(":bday", $data["bday"], PDO::PARAM_STR);
+			$stmt->bindParam(":bday", $bday, PDO::PARAM_STR);
 			$stmt->bindParam(":gender", $data["gender"], PDO::PARAM_STR);
 			$stmt->bindParam(":address", $data["address"], PDO::PARAM_STR);
 			$stmt->bindParam(":mobile", $data["mobile"], PDO::PARAM_STR);
-			$stmt->bindParam(":idPos", $data["idPos"], PDO::PARAM_INT);
+			$stmt->bindParam(":positioncode", $data["positioncode"], PDO::PARAM_STR);
 			$stmt->bindParam(":sssno", $data["sssno"], PDO::PARAM_STR);
 			$stmt->bindParam(":phino", $data["phino"], PDO::PARAM_STR);
 			$stmt->bindParam(":pagibig", $data["pagibig"], PDO::PARAM_STR);
@@ -33,7 +41,7 @@ class ModelEmployees{
 
 			$stmt->execute();
 		    $pdo->commit();
-		    return "ok";
+		    return $empcode;
 		}catch (Exception $e){
 			$pdo->rollBack();
 			return "error";
@@ -49,19 +57,24 @@ class ModelEmployees{
         	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->beginTransaction();
 
-			$stmt = $pdo->prepare("UPDATE employees SET empid = :empid, isactive = :isactive, lname = :lname, fname = :fname, mi = :mi, bday = :bday, gender = :gender, address = :address, mobile = :mobile, idPos = :idPos, sssno = :sssno, phino = :phino, pagibig = :pagibig, tin = :tin, estatus = :estatus WHERE id = :id");
+			if ($data["bday"] == ''){
+				$bday = null;
+			}else{
+				$bday = $data["bday"];
+			}
 
-			$stmt->bindParam(":id", $data["id"], PDO::PARAM_INT);
+			$stmt = $pdo->prepare("UPDATE employees SET empid = :empid, isactive = :isactive, lname = :lname, fname = :fname, mi = :mi, bday = :bday, gender = :gender, address = :address, mobile = :mobile, positioncode = :positioncode, sssno = :sssno, phino = :phino, pagibig = :pagibig, tin = :tin, estatus = :estatus WHERE empid = :empid");
+
 			$stmt->bindParam(":empid", $data["empid"], PDO::PARAM_STR);
 			$stmt->bindParam(":isactive", $data["isactive"], PDO::PARAM_INT);
 			$stmt->bindParam(":lname", $data["lname"], PDO::PARAM_STR);
 			$stmt->bindParam(":fname", $data["fname"], PDO::PARAM_STR);
 			$stmt->bindParam(":mi", $data["mi"], PDO::PARAM_STR);
-			$stmt->bindParam(":bday", $data["bday"], PDO::PARAM_STR);
+			$stmt->bindParam(":bday", $bday, PDO::PARAM_STR);
 			$stmt->bindParam(":gender", $data["gender"], PDO::PARAM_STR);
 			$stmt->bindParam(":address", $data["address"], PDO::PARAM_STR);
 			$stmt->bindParam(":mobile", $data["mobile"], PDO::PARAM_STR);
-			$stmt->bindParam(":idPos", $data["idPos"], PDO::PARAM_INT);
+			$stmt->bindParam(":positioncode", $data["positioncode"], PDO::PARAM_STR);
 			$stmt->bindParam(":sssno", $data["sssno"], PDO::PARAM_STR);
 			$stmt->bindParam(":phino", $data["phino"], PDO::PARAM_STR);
 			$stmt->bindParam(":pagibig", $data["pagibig"], PDO::PARAM_STR);
@@ -80,75 +93,38 @@ class ModelEmployees{
 		$stmt = null;
 	}	
 
-	static public function mdlShowEmployees($item, $value){
-		if($item != null){
-			$stmt = (new Connection)->connect()->prepare("SELECT * FROM employees WHERE $item = :$item");
-			$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
-			$stmt -> execute();
-			return $stmt -> fetch();
-		}else{
-			$stmt = (new Connection)->connect()->prepare("SELECT * FROM employees ORDER BY lname, fname");
-			$stmt -> execute();
-			return $stmt -> fetchAll();
-		}
-		$stmt -> close();
-		$stmt = null;
-	}
-
-	static public function mdlShowEmployeeName($item, $value){
-		$stmt = (new Connection)->connect()->prepare("SELECT * FROM employees WHERE $item = :$item");
-		$stmt -> bindParam(":".$item, $value, PDO::PARAM_STR);
-		$stmt -> execute();
-		return $stmt -> fetch();
-		$stmt -> close();
-		$stmt = null;
-	}	
-
-	static public function mdlShowEmployeesPosition(){
-		$stmt = (new Connection)->connect()->prepare("SELECT a.id,a.lname,a.fname,a.mi,b.positiondesc,a.mobile,a.estatus FROM employees AS a INNER JOIN position AS b ON (a.idPos = b.id) ORDER BY a.lname,a.fname");
-		$stmt -> execute();
+	static public function mdlEmployeeList(){
+        $stmt = (new Connection)->connect()->prepare("SELECT e.empid,e.isactive,e.lname,e.fname,e.mi,
+															e.bday,e.gender,e.address,e.mobile,p.positiondesc,
+															e.sssno,e.phino,e.pagibig,e.tin,e.estatus
+														FROM employees e INNER JOIN position p ON (e.positioncode = p.positioncode)");    
+        $stmt -> execute();
 		return $stmt -> fetchAll();
 		$stmt -> close();
-		$stmt = null;
-	}	
+		$stmt = null;                                                 
+    }
 
-    /*=============================================
-	SHOW POSITION
-	=============================================*/
+	public static function mdlEmployeeInfo($empid){
+		$sql = "SELECT e.empid,e.isactive,e.lname,e.fname,e.mi,
+					   e.bday,e.gender,e.address,e.mobile,p.positiondesc,p.positioncode,
+					   e.sssno,e.phino,e.pagibig,e.tin,e.estatus
+		        FROM employees e INNER JOIN position p ON (e.positioncode = p.positioncode)
+				WHERE empid = :empid LIMIT 1";
+		$conn = (new Connection)->connect();
+		$stmt = $conn->prepare($sql);
+		$stmt->bindParam(':empid', $empid, PDO::PARAM_STR);
+		$stmt->execute();
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		$stmt->closeCursor();
+		$stmt = null;
+		return $result ?: null;
+	}
+
 	static public function mdlShowPosition(){
 		$stmt = (new Connection)->connect()->prepare("SELECT * FROM position ORDER BY positiondesc");
 		$stmt -> execute();
 		return $stmt -> fetchAll();
 		$stmt -> close();
 		$stmt = null;	
-	}
-
-	static public function mdlShowStatus(){
-		$stmt = (new Connection)->connect()->prepare("SELECT * FROM estatus ORDER BY id");
-		$stmt -> execute();
-		return $stmt -> fetchAll();
-		$stmt -> close();
-		$stmt = null;	
-	}	
-
-	static public function mdlShowGender(){
-		$stmt = (new Connection)->connect()->prepare("SELECT * FROM gender ORDER BY id");
-		$stmt -> execute();
-		return $stmt -> fetchAll();
-		$stmt -> close();
-		$stmt = null;	
-	}
-
-	static public function mdlUpdateEmployee($table, $item1, $value1, $value){
-		$stmt = (new Connection)->connect()->prepare("UPDATE $table SET $item1 = :$item1 WHERE id = :id");
-		$stmt -> bindParam(":".$item1, $value1, PDO::PARAM_STR);
-		$stmt -> bindParam(":id", $value, PDO::PARAM_STR);
-		if($stmt -> execute()){
-			return "ok";
-		}else{
-			return "error";	
-		}
-		$stmt -> close();
-		$stmt = null;
 	}
 }

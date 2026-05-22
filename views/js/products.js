@@ -217,7 +217,6 @@ $(function () {
                 .responsive.recalc();
             plst.draw(false);
         }, 200);
-
     });
 
     $(".productListTable tbody").on("click", "button.btnProduct", function(){ 

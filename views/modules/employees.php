@@ -6,6 +6,7 @@
       <!-- <div class="loader-transparent rounded"></div> -->
       <div class="card-header d-flex bg-transparent border-bottom" style="border:1px solid rgba(255, 255, 255, 0.3);box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); border-radius: 10px;">
         <h5 class="card-title flex-grow-1 profile-header-title">EMPLOYEE INFORMATION</h5> 
+        <input type="hidden" name="trans_type" id="trans_type" value="New" required>
         <input type="hidden" id="employees-access" name="employees-access" value="<?php echo $_SESSION["employees"];?>">
         <div class="header-elements">
           <div class="list-icons">
@@ -71,12 +72,13 @@
         <div class="row">
             <div class="col-sm-4 form-group">
               <label for="sel-position">Designation</label>
-              <select class="form-control select-search" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" id="sel-position" name="sel-position" required>
+              <select data-placeholder="< Select Position >" class="form-control select-search" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" data-fouc id="sel-position" name="sel-position" required>
+              <!-- <select class="form-control select-search" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" id="sel-position" name="sel-position" required> -->
                 <option value="" selected hidden disabled>&lt;&nbsp;Select Position&nbsp;&gt;</option>
                 <?php
                     $position = (new ControllerEmployees)->ctrShowPosition();
                     foreach ($position as $key => $value) {
-                      echo '<option value="'.$value["id"].'">'.$value["positiondesc"].'</option>';
+                      echo '<option value="'.$value["positioncode"].'">'.$value["positiondesc"].'</option>';
                     }
                  ?>
               </select>
@@ -126,24 +128,65 @@
           <span class="float-right">
             <button type="button" class="btn btn-light btn-lg" id="btn-new" onClick="location.href='employees'"><i class="icon-file-text mr-2"></i> New</button>
 
-            <button type="button" class="btn btn-light btn-lg" id="btn-search" data-toggle="modal" data-target="#modal-search-employees"><i class="icon-search4 mr-2"></i> Search</button>
+            <button type="button" class="btn btn-light btn-lg" id="btn-search" data-toggle="modal" data-target="#modal-search-employee"><i class="icon-search4 mr-2"></i> Search</button>
            
-            <button type="submit" class="btn btn-light btn-lg"><i class="icon-floppy-disk mr-2"></i> Save</button>
+            <button type="button" class="btn btn-light btn-lg" id="btn-save"><i class="icon-floppy-disk mr-2"></i> Save</button>
           </span>
         </div>     
       </div>  <!-- card body -->
 
     </div>
   </form>
-    <?php
-      $createEmployee = new ControllerEmployees();
-      $createEmployee -> ctrCreateEmployee();
-
-      $editEmployee = new ControllerEmployees();
-      $editEmployee -> ctrEditEmployee();
-    ?>
   </div>
 </div>
 
-<script src="views/js/employees.js"></script>
+<!-- ============== Employee List ============ -->
+<div id="modal-search-employee" class="modal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content" style="background-color: #343f53;">
+      <div class="modal-header">
+        <h5 class="modal-title profile-name" style="margin-top:-3px;"><i class="icon-menu7 mr-2"></i> &nbsp; EMPLOYEE LIST&nbsp;&nbsp;&nbsp;&nbsp;</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <div class="h-divider">
+      </div>
+
+        <div class="row" pb-0 style="margin:10px;margin-bottom: -10px;">
+            <div class="col-sm-2 form-group" style="padding: 0px;padding-top:28px;padding-left:7px;margin:0;">
+                <button type="button" class="btn btn-warning" name="btn-export" id="btn-export" style="float:right; margin-right:3px; text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);">
+                    <i class="icon-file-spreadsheet"></i>
+                </button>
+                <button type="button" class="btn btn-primary" name="btn-print-employees" id="btn-print-products" style="float:right; margin-right:6px; text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);">
+                    <i class="icon-printer"></i>
+                </button>
+            </div>    
+
+            <div class="col-12" style="margin:10px;margin-top:-25px;">
+              <table class="table table-hover table-bordered table-striped datatable-small-font profile-grid-header employeeListTable" width="100%">
+                  <thead>
+                      <tr>
+                      <th style="min-width: 130px;">Emp ID</th>
+                      <th style="min-width: 160px;">Lastname</th>
+                      <th style="min-width: 160px;">Firstname</th>
+                      <th style="min-width: 25px;">MI</th>
+                      <th style="min-width: 120px;">Designation</th>
+                      <th style="min-width: 160px;">Mobile</th>
+                      <th style="min-width: 130px;">Status</th>
+                      <th style="max-width: 110px;">Act</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="views/js/employees.js?v=<?php echo filemtime('views/js/employees.js'); ?>"></script>
+
+<!-- <script src="views/js/employees.js"></script> -->
 

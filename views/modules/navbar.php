@@ -47,10 +47,8 @@
             }
           ?>
           <?php
-            $table = 'employees';
-            $item = 'empid';
-            $value = $_SESSION["empid"];
-            $employee = (new ControllerEmployees)->ctrShowEmployees($item, $value);
+            $empid = $_SESSION["empid"];
+            $employee = (new ControllerEmployees)->ctrEmployeeInfo($empid);
             $employee_fname = $employee["fname"];
           ?>
           <span style="font-size: 1.3em; padding-bottom: 0; padding-top: 5px;"><?php echo $employee_fname; ?></span>
