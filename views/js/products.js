@@ -8,32 +8,41 @@ $(function () {
             autoWidth: false,
             responsive: true,
             scrollY: 360,
+            scrollX: true,
             scrollCollapse: true,
             pageLength: 25,
+
             lengthMenu: [
                 [25, 50],
                 [25, 50]
             ],
+
             dom: '<"datatable-header"><"extra-row"><"datatable-scroll"t><"datatable-footer"fp>',
+
             columnDefs: [
                 {
                     targets: '_all',
                     className: 'align-middle'
                 }
             ],
+
             drawCallback: function () {
                 $(".productListTable td").css({
                     "padding-top": "5px",
                     "padding-bottom": "5px"
                 });
             },
+
             language: {
                 loadingRecords: 'Please wait - loading...',
                 processing:
                     '<i class="fa fa-spinner fa-spin fa-2x fa-fw"></i>',
+
                 search: '<span>Filter:</span> _INPUT_',
                 searchPlaceholder: 'Type to filter...',
+
                 lengthMenu: '<span>Show:</span> _MENU_',
+
                 paginate: {
                     first: 'First',
                     last: 'Last',
@@ -47,12 +56,15 @@ $(function () {
                             : '&larr;'
                 }
             },
+
             initComplete: function () {
+                let api = this.api();
                 setTimeout(function () {
-                    plst.columns.adjust().draw(false);
-                    if (plst.responsive) {
-                        plst.responsive.recalc();
+                    api.columns.adjust();
+                    if (api.responsive) {
+                        api.responsive.recalc();
                     }
+                    api.draw(false);
                 }, 300);
             }
         });
@@ -197,16 +209,16 @@ $(function () {
 
     $("#lst-categorycode").val('').trigger('change');
 
-    $('#modal-search-product')
-        .on('shown.bs.modal', function () {
-            setTimeout(function () {
-                plst.columns.adjust();
-                if (plst.responsive) {
-                    plst.responsive.recalc();
-                }
-                plst.draw(false);
-            }, 500);
-        });
+    $('#modal-search-product').on('shown.bs.modal', function () {
+        setTimeout(function () {
+            $.fn.dataTable
+                .tables({ visible: true, api: true })
+                .columns.adjust()
+                .responsive.recalc();
+            plst.draw(false);
+        }, 200);
+
+    });
 
     $(".productListTable tbody").on("click", "button.btnProduct", function(){ 
         $("#modal-search-product").modal("hide");

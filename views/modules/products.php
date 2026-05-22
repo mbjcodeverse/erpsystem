@@ -258,8 +258,10 @@
                 </button>                 -->
             </div>    
 
-            <div class="row" pb-0 style="margin:10px;margin-top:-25px;">
+            <div class="col-12" style="margin:10px;margin-top:-25px;">
             <table class="table table-hover table-bordered table-striped datatable-small-font profile-grid-header productListTable" width="100%">
+            <!-- <div class="row" pb-0 style="margin:10px;margin-top:-25px;">
+            <table class="table table-hover table-bordered table-striped datatable-small-font profile-grid-header productListTable" width="100%"> -->
                 <thead>
                     <tr>
                     <th style="min-width: 130px;">Prod ID</th>
