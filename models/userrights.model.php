@@ -19,10 +19,11 @@ class ModelUserRights{
 
 			// $encryptpass = crypt($data["upassword"], '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
 			$encryptpass = $data["upassword"];
-			$stmt = $pdo->prepare("INSERT INTO userrights(userid, empid, invoices, receivable, reports, dashboard, clients, employees, bank, accessprivilege, username, upassword) VALUES (:userid, :empid, :invoices, :receivable, :reports, :dashboard, :clients, :employees, :bank, :accessprivilege, :username, :upassword)");	
+			$stmt = $pdo->prepare("INSERT INTO userrights(userid, empid, utype, invoices, receivable, reports, dashboard, clients, employees, bank, accessprivilege, username, upassword) VALUES (:userid, :empid, :utype, :invoices, :receivable, :reports, :dashboard, :clients, :employees, :bank, :accessprivilege, :username, :upassword)");	
 
 			$stmt->bindParam(":userid", $usercode, PDO::PARAM_STR);
 			$stmt->bindParam(":empid", $data["empid"], PDO::PARAM_STR);
+			$stmt->bindParam(":utype", $data["utype"], PDO::PARAM_STR);
 			$stmt->bindParam(":invoices", $data["invoices"], PDO::PARAM_STR);	
 			$stmt->bindParam(":receivable", $data["receivable"], PDO::PARAM_STR);
 			$stmt->bindParam(":reports", $data["reports"], PDO::PARAM_STR);
@@ -50,10 +51,11 @@ class ModelUserRights{
         	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $pdo->beginTransaction();
 
-			$stmt = $pdo->prepare("UPDATE userrights SET userid = :userid, empid = :empid, invoices = :invoices, receivable = :receivable, reports = :reports, dashboard = :dashboard, clients = :clients, employees = :employees, bank = :bank, accessprivilege = :accessprivilege WHERE userid = :userid");
+			$stmt = $pdo->prepare("UPDATE userrights SET userid = :userid, empid = :empid, utype = :utype, invoices = :invoices, receivable = :receivable, reports = :reports, dashboard = :dashboard, clients = :clients, employees = :employees, bank = :bank, accessprivilege = :accessprivilege WHERE userid = :userid");
 
             $stmt->bindParam(":userid", $data["userid"], PDO::PARAM_STR);
 			$stmt->bindParam(":empid", $data["empid"], PDO::PARAM_STR);
+			$stmt->bindParam(":utype", $data["utype"], PDO::PARAM_STR);
 			$stmt->bindParam(":invoices", $data["invoices"], PDO::PARAM_STR);	
 			$stmt->bindParam(":receivable", $data["receivable"], PDO::PARAM_STR);
 			$stmt->bindParam(":reports", $data["reports"], PDO::PARAM_STR);

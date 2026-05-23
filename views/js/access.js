@@ -42,6 +42,7 @@ $(function() {
             success:function(answer){
                 $("#txt-userid").val(answer["userid"]);
                 $("#sel-empid").val(answer["empid"]).trigger('change');
+                $("#sel-utype").val(answer["utype"]).trigger('change');
                 $("#sel-invoices").val(answer["invoices"]).trigger('change');
                 $("#sel-receivable").val(answer["receivable"]).trigger('change');
                 $("#sel-reports").val(answer["reports"]).trigger('change');
@@ -83,6 +84,7 @@ $(function() {
         $("#txt-upassword").val(generateTempPassword());
 
         $("#sel-empid").val('').trigger('change');
+        $("#sel-utype").val('').trigger('change');
         $("#sel-invoices").val('').trigger('change');
         $("#sel-receivable").val('').trigger('change');
         $("#sel-reports").val('').trigger('change');
@@ -137,6 +139,7 @@ $(function() {
         var upassword = $("#txt-upassword").val();
 
         var empid = $("#sel-empid").val();
+        var utype = $("#sel-utype").val();
         var invoices = $("#sel-invoices").val();
         var receivable = $("#sel-receivable").val();
         var reports = $("#sel-reports").val();
@@ -150,6 +153,7 @@ $(function() {
         user.append("trans_type", trans_type);
         user.append("userid", userid);
         user.append("empid", empid);
+        user.append("utype", utype);
         user.append("invoices", invoices);
         user.append("receivable", receivable);
         user.append("reports", reports);

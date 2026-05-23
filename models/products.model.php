@@ -48,6 +48,67 @@ class ModelProducts{
 		$stmt = null;
 	}
 
+	static public function mdlEditProduct($data){
+		$db = new Connection();
+		$pdo = $db->connect();
+        try{
+        	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->beginTransaction();
+
+			$productcode = $data["prodid"];
+			$stmt = $pdo->prepare("UPDATE products SET categorycode = :categorycode,
+													   brandcode = :brandcode,
+													   purchaseitem = :purchaseitem,
+													   isactive = :isactive,
+													   prodid = :prodid,
+													   barcode = :barcode,
+													   pdesc = :pdesc,
+													   sellunit = :sellunit,
+													   specs = :specs,
+													   measure = :measure,
+													   uprice = :uprice,
+													   profit = :profit,
+													   ucost = :ucost,
+													   abbr = :abbr,
+													   vatdesc = :vatdesc,
+													   reorder = :reorder,
+													   disprice = :disprice,
+													   minqty = :minqty,
+													   prodname = :prodname
+													WHERE prodid = :prodid");
+
+			$stmt->bindParam(":categorycode", $data["categorycode"], PDO::PARAM_STR);
+			$stmt->bindParam(":brandcode", $data["brandcode"], PDO::PARAM_STR);
+			$stmt->bindParam(":purchaseitem", $data["purchaseitem"], PDO::PARAM_INT);
+			$stmt->bindParam(":isactive", $data["isactive"], PDO::PARAM_INT);
+			$stmt->bindParam(":prodid", $data["prodid"], PDO::PARAM_STR);
+			$stmt->bindParam(":barcode", $data["barcode"], PDO::PARAM_STR);
+			$stmt->bindParam(":pdesc", $data["pdesc"], PDO::PARAM_STR);
+			$stmt->bindParam(":sellunit", $data["sellunit"], PDO::PARAM_STR);
+			$stmt->bindParam(":specs", $data["specs"], PDO::PARAM_STR);
+			$stmt->bindParam(":measure", $data["measure"], PDO::PARAM_STR);
+			$stmt->bindParam(":uprice", $data["uprice"], PDO::PARAM_STR);
+			$stmt->bindParam(":profit", $data["profit"], PDO::PARAM_STR);
+			$stmt->bindParam(":ucost", $data["ucost"], PDO::PARAM_STR);
+			$stmt->bindParam(":abbr", $data["abbr"], PDO::PARAM_STR);
+			$stmt->bindParam(":vatdesc", $data["vatdesc"], PDO::PARAM_STR);
+			$stmt->bindParam(":reorder", $data["reorder"], PDO::PARAM_STR);
+			$stmt->bindParam(":disprice", $data["disprice"], PDO::PARAM_STR);
+			$stmt->bindParam(":minqty", $data["minqty"], PDO::PARAM_STR);
+			$stmt->bindParam(":prodname", $data["prodname"], PDO::PARAM_STR);
+
+			$stmt->execute();  
+
+		    $pdo->commit();
+		    return $productcode;
+		}catch (Exception $e){
+			$pdo->rollBack();
+			return "error";
+		}	
+		$pdo = null;	
+		$stmt = null;
+	}		
+
     static public function mdlProductSearchList($categorycode, $brandcode, $vatdesc){
         if ($categorycode != ''){
 			$category_code = " AND (c.categorycode = '$categorycode')";

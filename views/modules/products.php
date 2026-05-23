@@ -118,7 +118,7 @@
 
                     <div class="row">
                         <div class="col-sm-2 form-group">
-                            <label for="num-uprice">Unit Price</label>
+                            <label for="num-uprice" id="lbl-num-uprice" style="color:aqua;">= &gt; Unit Price</label>
                             <input type="text" class="form-control border-teal border-1 numeric" id="num-uprice" name="num-uprice" value="0.00" style="font-size: 1em;text-align:right;" readonly required>
                         </div>
 
@@ -128,7 +128,7 @@
                         </div>
 
                         <div class="col-sm-2 form-group">
-                            <label for="num-ucost">Unit Cost</label>
+                            <label for="num-ucost" id="lbl-num-ucost" style="color:aqua;">= &gt; Unit Cost</label>
                             <input type="text" class="form-control border-teal border-1 numeric" id="num-ucost" name="num-ucost" value="0.00" style="font-size: 1em;text-align:right;" readonly>
                         </div>
 
@@ -148,19 +148,19 @@
                         </div>
 
                         <div class="col-sm-2 form-group">
-                            <label for="num-reorder">Re-order</label>
+                            <label for="num-reorder" id="lbl-num-reorder" style="color:#b9fcb1;">= &gt; Re-order</label>
                             <input type="text" class="form-control border-teal border-1 numeric" id="num-reorder" name="num-reorder" value="0.00" style="font-size: 1em;text-align:right;" readonly>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-2 form-group">
-                            <label for="num-disprice">Disc Price</label>
+                            <label for="num-disprice" id="lbl-num-disprice" style="color:#b9fcb1;">= &gt; Disc Price</label>
                             <input type="text" class="form-control border-teal border-1 numeric" id="num-disprice" name="num-disprice" value="0.00" style="font-size: 1em;text-align:right;" readonly>
                         </div>
 
                         <div class="col-sm-2 form-group">
-                            <label for="num-minqty">Min Qty</label>
+                            <label for="num-minqty" id="lbl-num-minqty" style="color:#b9fcb1;">= &gt; Min Qty</label>
                             <input type="text" class="form-control border-teal border-1 numeric" id="num-minqty" name="num-minqty" value="0.00" style="font-size: 1em;text-align:right;" readonly>
                         </div>
 

@@ -80,6 +80,29 @@ $(function () {
         $("#sel-brandcode").val('').trigger('change');
     });
 
+    $("#lbl-num-uprice").click(function () {
+        $("#num-uprice").val('0.00');
+        computeProfit();
+    });
+
+    $("#lbl-num-ucost").click(function () {
+        $("#num-ucost").val('0.00');
+        computeProfit();
+    });
+
+    $("#lbl-num-reorder").click(function () {
+        $("#num-reorder").val('0.00');
+    });
+
+    $("#lbl-num-disprice").click(function () {
+        $("#num-disprice").val('0.00');
+    });
+
+    $("#lbl-num-minqty").click(function () {
+        $("#num-minqty").val('0.00');
+    });
+
+    // Search options...
     $("#lbl-lst-categorycode").click(function () {
         $("#lst-categorycode").val('').trigger('change');
     });
@@ -139,6 +162,30 @@ $(function () {
             );
         }
     );
+
+    function computeProfit(){
+        let num_ucost = $('#num-ucost').val();
+        let num_uprice = $('#num-uprice').val();
+        let ucost =
+            parseFloat(
+                num_ucost.replace(/,/g, "")
+            ) || 0;
+        let price =
+            parseFloat(
+                num_uprice.replace(/,/g, "")
+            ) || 0;
+        let profit = 0;
+
+        if (price > 0) {
+            profit = price - ucost;
+        }
+
+        $('#num-profit').val(
+            numberWithCommas(
+                profit.toFixed(2)
+            )
+        );
+    }
 
     $('#lst-categorycode, #lst-brandcode, #lst-vatdesc')
         .on("change", function () {

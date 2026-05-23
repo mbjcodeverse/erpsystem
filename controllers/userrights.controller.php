@@ -40,6 +40,7 @@ class ControllerUserRights{
 					$_SESSION["id"] = $answer["id"];
 					
 					$_SESSION["empid"] = $answer["empid"];
+					$_SESSION["utype"] = $answer["utype"];
 					$_SESSION["userid"] = $answer["userid"];
 					
 					$_SESSION["invoices"] = $answer["invoices"];
@@ -59,17 +60,27 @@ class ControllerUserRights{
 					$empid = $_SESSION["empid"];
 					$answer = (new ModelUserRights)->mdlAddLogin($empid);
 				    if ($answer == 'ok') {
-						if ($_SESSION["dashboard"] == "Full"){
-							$_SESSION["show_dashboard"] = true;
+						if ($_SESSION["utype"] == "Cashier"){
 							echo '<script>
-									window.location = "home";
+								window.location = "cashier";
 								</script>';
 						}else{
-							$_SESSION["show_dashboard"] = false;
 							echo '<script>
-									window.location = "default";
-								</script>';
+									window.location = "home";
+									</script>';
 						}
+
+						// if ($_SESSION["dashboard"] == "Full"){
+						// 	$_SESSION["show_dashboard"] = true;
+						// 	echo '<script>
+						// 			window.location = "home";
+						// 		</script>';
+						// }else{
+						// 	$_SESSION["show_dashboard"] = false;
+						// 	echo '<script>
+						// 			window.location = "default";
+						// 		</script>';
+						// }
 				    }
 				}else{
 					echo '<br><div style="text-align:center;" class="alert alert-danger">User or password incorrect</div>';

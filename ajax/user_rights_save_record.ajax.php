@@ -6,6 +6,7 @@ class userRightsEntry{
   public $trans_type; 
   public $userid;
   public $empid;
+  public $utype;
   public $invoices;
   public $receivable;
   public $reports;
@@ -21,6 +22,7 @@ class userRightsEntry{
     $trans_type = $this->trans_type;
     $userid = $this->userid;
     $empid = $this->empid;
+    $utype = $this->utype;
     $invoices = $this->invoices;
   	$receivable = $this->receivable;
     $reports = $this->reports;
@@ -34,6 +36,7 @@ class userRightsEntry{
 
     $data = array("userid"=>$userid,
                   "empid"=>$empid,
+                  "utype"=>$utype,
                   "invoices"=>$invoices,
                   "receivable"=>$receivable,
                   "reports"=>$reports,
@@ -61,6 +64,7 @@ $inputUserRights = new userRightsEntry();
 $inputUserRights -> trans_type = $_POST["trans_type"];
 $inputUserRights -> userid = $_POST["userid"];
 $inputUserRights -> empid = $_POST["empid"];
+$inputUserRights -> utype = $_POST["utype"];
 $inputUserRights -> invoices = $_POST["invoices"];
 $inputUserRights -> receivable = $_POST["receivable"];
 $inputUserRights -> reports = $_POST["reports"];

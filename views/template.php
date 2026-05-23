@@ -99,10 +99,21 @@
 <!-- Site wrapper -->
   <?php
     if(isset($_SESSION["loggedIn"]) && $_SESSION["loggedIn"] == "ok"){
-      include "modules/navbar.php";
-      echo '<div class="page-content">';
-      include "modules/sidebar.php";
-      echo '<div class="content-wrapper">';
+      // include "modules/navbar.php";
+      // echo '<div class="page-content">';
+      // include "modules/sidebar.php";
+      // echo '<div class="content-wrapper">';
+
+      if ($_SESSION["utype"] != "Cashier"){
+        include "modules/navbar.php";
+        echo '<div class="page-content">';
+        include "modules/sidebar.php";
+        echo '<div class="content-wrapper">';
+      }else{
+        include "modules/navbarsimple.php";
+        echo '<div class="page-content">';
+        echo '<div class="content-wrapper">';
+      }
 
       if(isset($_GET["route"])){
         if ($_GET["route"] == 'home' ||
@@ -119,6 +130,7 @@
             $_GET["route"] == 'brand' ||
             $_GET["route"] == 'access' ||
             $_GET["route"] == 'products' ||
+            $_GET["route"] == 'cashier' ||
             $_GET["route"] == 'resetloginaccount' ||
             $_GET["route"] == 'default' ||
             $_GET["route"] == 'logout'){

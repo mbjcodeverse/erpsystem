@@ -24,23 +24,30 @@
 
       <div class="card-body">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-7">
                 <label for="sel-empid">USER FULL NAME</label>
-                <select class="form-control select-search" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" id="sel-empid" name="sel-empid" required>
-                <option value="" selected hidden disabled>&lt;&nbsp;Select Employee&nbsp;&gt;</option>
-                <?php
-                    $item = null;
-                    $value = null;
-                    $employee = (new ControllerEmployees)->ctrShowEmployees($item, $value);
-                    foreach ($employee as $key => $value) {
-                      echo '<option value="'.$value["empid"].'">'.$value["lname"].', '.$value["fname"].'</option>';
-                    }
-                ?>
+                <select data-placeholder="< Select Employee >" class="form-control select-search" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" data-fouc id="sel-empid" name="sel-empid" required>
+                  <option value="" selected hidden disabled>&lt;&nbsp;Select Employee&nbsp;&gt;</option>
+                  <?php
+                      $employee = (new ControllerEmployees)->ctrEmployeeList();
+                      foreach ($employee as $key => $value) {
+                        echo '<option value="'.$value["empid"].'">'.$value["lname"].', '.$value["fname"].'</option>';
+                      }
+                  ?>
                 </select>              
             </div>
-        </div>  
 
-        <br>
+            <div class="col-sm-5 form-group">
+              <label for="sel-utype">User Type</label>
+              <select data-placeholder="< Select Type >" class="form-control select" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" data-fouc id="sel-utype" name="sel-utype" required>
+                <option></option>
+                <option value="Super Admin">Super Admin</option>
+                <option value="Admin">Admin</option>
+                <option value="Regular">Regular</option>
+                <option value="Cashier">Cashier</option>
+              </select>
+            </div>
+        </div>  
 
         <div class="row">                  
             <div class="col-sm-6 form-group">
