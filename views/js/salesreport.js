@@ -42,8 +42,8 @@ $(function() {
     $('#lst-reptype, #lst-branchcode, #lst_date_range, #lst-categorycode, #lst-salemode, #lst-status').on("change", function() {
         $(".sales_content").empty();
         if ($('#lst-reptype').val() != ''){
-            $("#btn-print-report").prop('disabled', false);
-            $("#btn-export").prop('disabled', false);
+            $("#btn-print-report").prop('disabled', true);
+            $("#btn-export").prop('disabled', true);
             $("#btn-generate").prop('disabled', false);
         }
     });    
@@ -98,13 +98,13 @@ $(function() {
                                 html.push('</tr>');
                             html.push('</thead>');
 
-                            for(var i = 0; i < answer.length; i++) {
-                                var sales = answer[i];
-                                var catdescription = sales.catdescription;
-                                var total_qty = numberWithCommas(sales.total_qty);
-                                var total_amount = numberWithCommas(sales.total_amount);
-                                var total_cost = numberWithCommas(sales.total_cost);
-                                var total_profit = numberWithCommas(sales.total_profit);
+                            for(let i = 0; i < answer.length; i++) {
+                                let sales = answer[i];
+                                let catdescription = sales.catdescription;
+                                let total_qty = numberWithCommas(sales.total_qty);
+                                let total_amount = numberWithCommas(sales.total_amount);
+                                let total_cost = numberWithCommas(sales.total_cost);
+                                let total_profit = numberWithCommas(sales.total_profit);
                                 html.push('<tr>');
                                     if (i == answer.length - 1){
                                         html.push('<td style="font-size:1.1em;font-weight:bold;border-top: 2px solid white;">OVERALL AMOUNT</td>');
@@ -123,8 +123,172 @@ $(function() {
                             }   
                         html.push('</table>');
                   html.push('</div>');
+                }else if (reptype == 2){
+                    html.push('<div class="table-responsive" style="overflow-y: auto; max-height: 470px;">');
+                        html.push('<table class="table mx-auto w-auto">');
+                            html.push('<thead>');
+                                html.push('<tr>');
+                                    html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Category</th>');
+                                    html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Product</th>');
+                                    html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Qty</th>');
+                                    html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Amount</th>');
+                                    html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Cost</th>');
+                                    html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Profit</th>');
+                                html.push('</tr>');
+                            html.push('</thead>');
+
+                            for(var i = 0; i < answer.length; i++) {
+                                let sales = answer[i];
+                                let catdescription = sales.catdescription;
+                                let prodname = sales.prodname;
+
+                                if (sales.prodname == null){
+                                    prodname = '';
+                                    catdescription = '';
+                                }else{
+                                    if (i == 0){
+                                        var prev_catdescription = sales.catdescription;
+                                    }else{
+                                        var curr_catdescription = sales.catdescription;
+                                        if (prev_catdescription == curr_catdescription){
+                                            catdescription = '';
+                                        }
+                                            var prev_catdescription = curr_catdescription;
+                                    }                 
+                                }
+
+                                let total_qty = numberWithCommas(sales.total_qty);
+                                let total_amount = numberWithCommas(sales.total_amount);
+                                let total_cost = numberWithCommas(sales.total_cost);
+                                let total_profit = numberWithCommas(sales.total_profit);
+
+                                html.push('<tr>');
+                                    html.push('<td>'+catdescription+'</td>');
+                                    html.push('<td>'+prodname+'</td>');
+                                    if (sales.prodname == null){
+                                        html.push('<td style="font-size:1.2em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+total_qty+'</td>');
+                                        html.push('<td style="font-size:1.2em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+total_amount+'</td>');
+                                        html.push('<td style="font-size:1.2em;font-weight:bold;text-align:right;border-top: 2px solid white;border-left: 2px solid white;color:#fc8677;">'+total_cost+'</td>');
+                                        html.push('<td style="font-size:1.2em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+total_profit+'</td>');
+                                    }else{
+                                        html.push('<td style="text-align:right;">'+total_qty+'</td>');
+                                        html.push('<td style="text-align:right;">'+total_amount+'</td>');
+                                        if (sales.total_profit > 0.00){
+                                            html.push('<td style="text-align:right;color:#fc8677;border-left: 2px solid white;">'+total_cost+'</td>');
+                                            html.push('<td style="text-align:right;color:#0FFF50;">'+total_profit+'</td>');
+                                        }else{
+                                            html.push('<td style="text-align:right;color:#0FFF50;border-left: 2px solid white;">'+total_cost+'</td>');
+                                            html.push('<td style="text-align:right;color:#fc8677;">'+total_profit+'</td>');
+                                        }
+                                    }  
+                                html.push('</tr>');
+                            }
+                        html.push('</table>');
+                   html.push('</div>');          
+                }else if (reptype == 3){
+                    html.push('<div class="table-responsive" style="overflow-y: auto; max-height: 470px;">');
+                        html.push('<table class="table mx-auto w-auto">');
+                            html.push('<thead>');
+                                html.push('<tr>');
+                                html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Date</th>');
+                                html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Invoice #</th>');
+                                html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Products</th>');
+                                html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Qty</th>');
+                                html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Price</th>');
+                                html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Total</th>');
+                                html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Cost</th>');
+                                html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Profit</th>');
+                                html.push('</tr>');
+                            html.push('</thead>');
+
+                            for(let i = 0; i < answer.length; i++) {
+                                let sales = answer[i];
+
+                                let inv_date = sales.sdate;
+                                let sdate = inv_date.substring(5, 7) + '/' + inv_date.substring(8, 10) + '/' + inv_date.substring(0, 4);
+
+                                let invno = sales.invno;
+                                let status = sales.status;
+                                let prodname = sales.prodname;
+                                let qty = numberWithCommas(sales.qty);
+                                let price = numberWithCommas(sales.uprice);
+                                let tamount = numberWithCommas(sales.tamount);
+                                let cost = numberWithCommas(sales.cost);
+                                let profit = numberWithCommas(sales.profit);
+
+                                if (prodname == null){
+                                    invno = '';
+                                    pdesc = '';
+                                    price = '';
+                                    sdate = '';
+                                }else{
+                                    if (i == 0){
+                                        var prev_invno = sales.invno;
+                                        var prev_sdate = sales.sdate;
+                                    }else{
+                                        var curr_invno = sales.invno;
+                                        if (prev_invno == curr_invno){
+                                            invno = '';
+                                        }
+                                        var prev_invno = curr_invno;
+                                        var curr_sdate = sales.sdate;
+                                        if (prev_sdate == curr_sdate){
+                                            sdate = '';
+                                        }
+                                        var prev_sdate = curr_sdate;                    
+                                    }                 
+                                }
+
+                                html.push('<tr>');
+                                html.push('<td>'+sdate+'</td>');
+
+                                if (status == 'Void'){
+                                    html.push('<td style="color:orange;">'+invno+'</td>');
+                                }else{
+                                    html.push('<td>'+invno+'</td>');
+                                }
+
+                                if (i == answer.length - 1){
+                                    html.push('<td style="font-size:1.2em;font-weight:bold;">OVERALL AMOUNT</td>');
+                                }else{
+                                    if (prodname == null){
+                                        html.push('<td style="text-align:right;"></td>');
+                                    }else{
+                                        html.push('<td>'+prodname+'</td>');
+                                    }
+                                }
+                                
+                                if (prodname == null){
+                                    html.push('<td style="text-align:right;"></td>');
+                                }else{
+                                    html.push('<td style="text-align:right;">'+qty+'</td>');
+                                } 
+
+                                html.push('<td style="text-align:right;">'+price+'</td>');
+
+                                if (prodname == null){
+                                    html.push('<td style="font-size:1.2em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+tamount+'</td>');
+                                    html.push('<td style="font-size:1.2em;font-weight:bold;text-align:right;border-top: 2px solid white;border-left: 2px solid white;color:#fc8677;">'+cost+'</td>');
+                                    html.push('<td style="font-size:1.2em;font-weight:bold;text-align:right;border-top: 2px solid white;color:#0FFF50;">'+profit+'</td>');
+                                }else{
+                                    html.push('<td style="text-align:right;">'+tamount+'</td>');
+                                    if (sales.profit > 0.00){
+                                        html.push('<td style="text-align:right;color:#fc8677;border-left: 2px solid white;">'+cost+'</td>');
+                                        html.push('<td style="text-align:right;color:#0FFF50;">'+profit+'</td>');
+                                    }else{
+                                        html.push('<td style="text-align:right;color:#fc8677;border-left: 2px solid white;">'+cost+'</td>');
+                                        html.push('<td style="text-align:right;color:#fc8677;">'+profit+'</td>');
+                                    }
+                                }
+                                html.push('</tr>'); 
+                            }
+                        html.push('</table>');
+                   html.push('</div>'); 
                 }
+
                 $('.sales_content').html(html.join('')); 
+                $("#btn-print-report").prop('disabled', true);
+                $("#btn-export").prop('disabled', false);
             }
         });
     });
@@ -156,15 +320,12 @@ $(function() {
     // }); 
 
     function exportToExcel() {
-        var location = 'data:application/vnd.ms-excel;base64,';
-        var excelTemplate = '<html> ' +
-        '<head> ' +
-        '<meta http-equiv="content-type" content="text/plain; charset=UTF-8"/> ' +
-        '</head> ' +
-        '<body> ' +
-        document.getElementById("collection_content").innerHTML +
-        '</body> ' +
-        '</html>'
-        window.location.href = location + window.btoa(excelTemplate);
-    }    
+        var table = document.querySelector(".sales_content table");
+        if (!table) {
+            alert("No report data to export.");
+            return;
+        }
+        var wb = XLSX.utils.table_to_book(table, { sheet: "Sales Report" });
+        XLSX.writeFile(wb, "SalesReport.xlsx");
+    }
 });    

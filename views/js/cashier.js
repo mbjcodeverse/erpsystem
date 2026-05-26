@@ -115,13 +115,31 @@ $(function() {
         bill_order();
     });
 
-    // ---------------- Override Sales --------------------------------------------------
+
+    // ---------------- OVERRIDE PRICE --------------------------------------------------
     shortcut.add("F8",function() {
         if($('#btn-override').prop('disabled')){ 
         }else{
             $('#modal-override-order').modal('show');
         }
     });
+
+    $('#modal-override-order').on('shown.bs.modal', function (e) {
+        $('#tns-override').val('');
+        $('#tns-override').focus();
+    });  
+    
+    $("#btn-admin-direct-override").click(function(){
+	    override_price();
+    }); 
+
+    $("#tns-override").keyup(function(event) {
+        if (event.keyCode === 13) {
+            override_price();
+        }
+    });
+    // ----------------------------------------------------------------------------------
+
 
     // Increase width of datatable filtered box
     $('.dataTables_filter input[type="search"]').css({'width':'350px','display':'inline-block'});
@@ -246,7 +264,7 @@ $(function() {
     // -------------------------------------------------------------------------------------
     
     // Total Amount = Qty * Price
-    $(".cashier-form").on("keydown keypress blur focus", "input.qty,input.price", function(){
+    $(".cashier-form").on("keydown keypress blur focus", "input.qty,input.uprice", function(){
         let prodid = $(this).parent().parent().children(".qtyEntry").children().attr("prodid");
 
         let q = $(this).parent().parent().children(".qtyEntry").children().val();
@@ -561,43 +579,126 @@ $(function() {
         });
     }
 
-    function loadBranchProducts(){
-        let branchcode = $("#branch_code").val();
-        let product_list = new FormData();
-        product_list.append("branchcode", branchcode);
-        $.ajax({
-            url:"ajax/branch_product_list.ajax.php",
-            method: "POST",
-            data: product_list,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType:"json",
-            success:function(answer){
-                for(var i = 0; i < answer.length; i++) {
-                    let prod = answer[i];
-                    let prodid = prod.prodid;
-                    let prodname = prod.prodname;
-                    let barcode = prod.barcode;
+function loadBranchProducts(){
 
-                    let price_amount = prod.uprice;
-                    let uprice = numberWithCommas(price_amount);
+    let branchcode = $("#branch_code").val();
 
-                    let ucost_amount = prod.ucost;
-                    let ucost = numberWithCommas(ucost_amount);
+    let product_list = new FormData();
+    product_list.append("branchcode", branchcode);
 
-                    let disprice = prod.disprice;
-                    let minqty = prod.minqty;
+    $.ajax({
 
-                    let vatdesc = prod.vatdesc;
+        url: "ajax/branch_product_list.ajax.php",
+        method: "POST",
+        data: product_list,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: "json",
 
-                    var button = "<td><button type='button' class='btn btn-outline btn-sm bg-green-400 border-green-400 text-green-400 btn-icon rounded-round border-2 ml-2 addProduct recoverButton' prodid='"+prodid+"' prodname='"+prodname+"' uprice='"+uprice+"' ucost='"+ucost+"' disprice='"+disprice+"' minqty='"+minqty+"' vatdesc='"+vatdesc+"' barcode='"+barcode+"'><i class='icon-check'></i></button></td>";  
-                    pl.row.add([prodname, uprice, prodid, ucost, disprice, minqty, vatdesc, barcode, button]); 
+        success: function(answer){
+
+            // Clear table
+            pl.clear();
+
+            for(var i = 0; i < answer.length; i++) {
+
+                let prod = answer[i];
+
+                let prodid = prod.prodid;
+                let prodname = prod.prodname;
+                let barcode = prod.barcode;
+
+                let uprice = numberWithCommas(prod.uprice);
+                let ucost = numberWithCommas(prod.ucost);
+
+                let disprice = prod.disprice;
+                let minqty = parseFloat(prod.minqty);
+                let vatdesc = prod.vatdesc;
+
+                var button = `
+                    <button type='button'
+                        class='btn btn-outline btn-sm bg-green-400 border-green-400 text-green-400 btn-icon rounded-round border-2 ml-2 addProduct recoverButton'
+                        prodid='${prodid}'
+                        prodname='${prodname}'
+                        uprice='${uprice}'
+                        ucost='${ucost}'
+                        disprice='${disprice}'
+                        minqty='${minqty}'
+                        vatdesc='${vatdesc}'
+                        barcode='${barcode}'>
+                        <i class='icon-check'></i>
+                    </button>
+                `;
+
+                // Add row only
+                let rowNode = pl.row.add([
+                    prodname,
+                    uprice,
+                    prodid,
+                    ucost,
+                    disprice,
+                    minqty,
+                    vatdesc,
+                    barcode,
+                    button
+                ]).node();
+
+                // Change row color
+                if(minqty > 0){
+                    $(rowNode).css({
+                        "background-color": "rgba(255, 178, 99, 0.05)",
+                        "color": "#36f569",
+                        // "font-weight": "bold"
+                    });
                 }
-                pl.draw();
             }
-        });  	
-    }
+            // Draw table ONCE
+            pl.draw();
+
+        }
+
+    });
+
+}  
+
+    // function loadBranchProducts(){
+    //     let branchcode = $("#branch_code").val();
+    //     let product_list = new FormData();
+    //     product_list.append("branchcode", branchcode);
+    //     $.ajax({
+    //         url:"ajax/branch_product_list.ajax.php",
+    //         method: "POST",
+    //         data: product_list,
+    //         cache: false,
+    //         contentType: false,
+    //         processData: false,
+    //         dataType:"json",
+    //         success:function(answer){
+    //             for(var i = 0; i < answer.length; i++) {
+    //                 let prod = answer[i];
+    //                 let prodid = prod.prodid;
+    //                 let prodname = prod.prodname;
+    //                 let barcode = prod.barcode;
+
+    //                 let price_amount = prod.uprice;
+    //                 let uprice = numberWithCommas(price_amount);
+
+    //                 let ucost_amount = prod.ucost;
+    //                 let ucost = numberWithCommas(ucost_amount);
+
+    //                 let disprice = prod.disprice;
+    //                 let minqty = prod.minqty;
+
+    //                 let vatdesc = prod.vatdesc;
+
+    //                 var button = "<td><button type='button' class='btn btn-outline btn-sm bg-green-400 border-green-400 text-green-400 btn-icon rounded-round border-2 ml-2 addProduct recoverButton' prodid='"+prodid+"' prodname='"+prodname+"' uprice='"+uprice+"' ucost='"+ucost+"' disprice='"+disprice+"' minqty='"+minqty+"' vatdesc='"+vatdesc+"' barcode='"+barcode+"'><i class='icon-check'></i></button></td>";  
+    //                 pl.row.add([prodname, uprice, prodid, ucost, disprice, minqty, vatdesc, barcode, button]); 
+    //             }
+    //             pl.draw();
+    //         }
+    //     });  	
+    // }
 
     function new_order(){
         $('div.dataTables_filter input').focus();
@@ -894,4 +995,118 @@ $(function() {
             }
         });
     } 
+
+    function override_price(){ 
+      // Focus input override textbox after sweetalert is closed
+      $('#tns-override').focus();
+      if ($("#tns-override").val() == ''){  // empty override key
+         swal.fire({
+            title: 'Cannot proceed, override key must be entered!',
+            type: 'error',
+            confirmButtonText: 'Got it',
+            confirmButtonClass: 'btn btn-outline-success',
+            allowOutsideClick: false,
+            buttonsStyling: false
+         }).then(function(result){
+            if(result.value) {              
+              $('#tns-override').focus();
+            }
+         });
+        }else{
+           let override_key = $("#tns-override").val();
+           var override_sale = new FormData();
+           override_sale.append("override_key", override_key);
+           $.ajax({
+              url:"ajax/get_override_key.ajax.php",
+              method: "POST",
+              data: override_sale,
+              cache: false,
+              contentType: false,
+              processData: false,
+              dataType:"json",
+              success:function(answer){
+                if(answer["overridekey"] === undefined){  // override key not found
+                  swal.fire({
+                    title: 'Unidentified override key!',
+                    type: 'info',
+                    confirmButtonText: 'Got it',
+                    confirmButtonClass: 'btn btn-outline-success',
+                    allowOutsideClick: false,
+                    buttonsStyling: false,
+                  }).then(function(result){
+                    if(result.value) { 
+                      $('#tns-override').val('');
+                    }
+                  });
+                }else{    // Valid override key
+                    swal.fire({
+                        title: 'Do you want to OVERRIDE order transaction?',
+                        text: 'You will not be able to revert this process.',
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, Override it!',
+                        cancelButtonText: 'Cancel!',
+                        confirmButtonClass: 'btn btn-outline-success',
+                        cancelButtonClass: 'btn btn-outline-danger',
+                        allowOutsideClick: false,
+                        buttonsStyling: false
+                        }).then(function(result) {
+                        if(result.value) {
+                            $("#modal-override-order").modal('hide');
+                            $("#btn-override").prop('disabled', true);
+                            // Enable all price input control
+                            $(".priceEntry *").prop('disabled', false);
+                        }else if (result.dismiss === Swal.DismissReason.cancel){
+                            $('#tns-override').val('');
+                        }
+                    });
+
+                    // // -----------------------------------------------------------------------
+                    // if(answer["price"] == 1){     // add this line only - price field in users table
+                    //   swal.fire({
+                    //     title: 'Do you want to OVERRIDE order transaction?',
+                    //     text: 'You will not be able to revert this process.',
+                    //     type: 'question',
+                    //     showCancelButton: true,
+                    //     confirmButtonText: 'Yes, Override it!',
+                    //     cancelButtonText: 'Cancel!',
+                    //     confirmButtonClass: 'btn btn-outline-success',
+                    //     cancelButtonClass: 'btn btn-outline-danger',
+                    //     allowOutsideClick: false,
+                    //     buttonsStyling: false
+                    //   }).then(function(result) {
+                    //     if(result.value) {
+                    //       $("#modal-override-order").modal('hide');
+                    //       $("#btn-override").prop('disabled', true);
+                    //       // Enable all price input control
+                    //       $(".priceEntry *").prop('disabled', false);
+                    //     }else if (result.dismiss === Swal.DismissReason.cancel){
+                    //       $('#tns-override').val('');
+                    //     }
+                    //   });
+                    // }else{    // add this block
+                    //   swal.fire({
+                    //     title: 'You are not authorize to override item price!',
+                    //     type: 'info',
+                    //     confirmButtonText: 'Got it',
+                    //     confirmButtonClass: 'btn btn-outline-success',
+                    //     allowOutsideClick: false,
+                    //     buttonsStyling: false,
+                    //   }).then(function(result){
+                    //     if(result.value) { 
+                    //       $('#tns-override').val('');
+                    //     }
+                    //   });
+                    // }         // add  
+                    // ----------------------------------------------------------------------- 
+                }
+              },
+              error: function () {
+                 alert("Oops. Something went wrong!");
+              },
+              complete: function () {
+             }
+           });
+       } // if (override == '')  
+   }
 });    

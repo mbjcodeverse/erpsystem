@@ -204,7 +204,7 @@
         </div>
       </div> 
 
-      <div class="h-divider"></div>
+      <!-- <div class="h-divider"></div>
 
       <div class="row" pb-0 style="margin:10px;margin-bottom: 0px;">
         <div class="col-sm-12 form-group">
@@ -217,7 +217,7 @@
         <div class="btn-group">
           <button type="button" class="btn btn-light btn-lg" id="btn-override-request" style="font-size: 1.3em;color:orange;"><i class="icon-paperplane icon-2x"></i>&nbsp;&nbsp;Send Discount Request</button>
         </div>
-      </div> 
+      </div>  -->
 
     </div>
   </div>

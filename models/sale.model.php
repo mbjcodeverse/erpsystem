@@ -177,19 +177,46 @@ class ModelSale{
 
 		if ($reptype == 1){
 			$stmt = (new Connection)->connect()->prepare("SELECT c.catdescription,
-																SUM(si.qty) as total_qty,
-																SUM(si.tamount) as total_amount,
-																SUM(si.ucost * ABS(si.qty)) as total_cost,
-																SUM((si.uprice - si.ucost) * ABS(si.qty)) as total_profit
+																 SUM(si.qty) as total_qty,
+																 SUM(si.tamount) as total_amount,
+																 SUM(si.ucost * ABS(si.qty)) as total_cost,
+																 SUM((si.uprice - si.ucost) * ABS(si.qty)) as total_profit
 														   FROM category as c INNER JOIN products as p ON (c.categorycode = p.categorycode)
 														                      INNER JOIN salesitems as si ON (p.prodid = si.prodid)
 																			  INNER JOIN sales as s ON (s.invno = si.invno)
-												                 $whereClause GROUP BY c.catdescription WITH ROLLUP");
-			$stmt -> execute();
-			return $stmt -> fetchAll();
-			$stmt -> close();
-			$stmt = null;													 
-	    }
+												                 $whereClause GROUP BY c.catdescription WITH ROLLUP");												 
+	    }elseif ($reptype == 2){
+			$stmt = (new Connection)->connect()->prepare("SELECT c.catdescription,
+																 p.prodname,
+																 SUM(si.qty) as total_qty,
+																 SUM(si.tamount) as total_amount,
+																 SUM(si.ucost * ABS(si.qty)) as total_cost,
+																 SUM((si.uprice - si.ucost) * ABS(si.qty)) as total_profit
+															FROM category as c INNER JOIN products as p ON (c.categorycode = p.categorycode)
+																			   INNER JOIN salesitems AS si ON (p.prodid = si.prodid)
+																			   INNER JOIN sales as s ON (s.invno = si.invno)
+																  $whereClause GROUP BY c.catdescription,p.prodname WITH ROLLUP");	    	
+	    }elseif ($reptype == 3){
+			$stmt = (new Connection)->connect()->prepare("SELECT s.id,
+																 MAX(s.sdate) AS sdate,
+																 MAX(s.invno) AS invno,
+																 MAX(s.status) AS status,
+																 p.prodname,
+																 SUM(si.qty) AS qty,
+																 AVG(si.uprice) AS uprice,
+																 SUM(si.tamount) AS tamount,
+																 SUM(si.ucost * ABS(si.qty)) AS cost,
+																 SUM((si.uprice - si.ucost) * ABS(si.qty)) AS profit
+															 FROM category AS c INNER JOIN products AS p ON c.categorycode = p.categorycode
+																				INNER JOIN salesitems AS si ON p.prodid = si.prodid
+																				INNER JOIN sales AS s ON s.invno = si.invno
+															       $whereClause GROUP BY s.id, p.prodname WITH ROLLUP");
+		}
+
+		$stmt -> execute();
+		return $stmt -> fetchAll();
+		$stmt -> close();
+		$stmt = null;	
 	}
 }
 

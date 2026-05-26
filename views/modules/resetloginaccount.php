@@ -6,10 +6,13 @@
       <!-- <div class="loader-transparent rounded"></div> -->
       <div class="card-header d-flex bg-transparent border-bottom" style="border:1px solid rgba(255, 255, 255, 0.3);box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5); border-radius: 10px;">
         <h5 class="card-title flex-grow-1 profile-header-title">RESET ACCOUNT</h5>
+
         <input type="hidden" id="txt-userid" name="txt-userid" required> 
+        <input type="hidden" name="user_type" id="user_type" value="<?php echo $_SESSION["utype"];?>">
+
         <div class="header-elements">
           <div class="list-icons">
-            <a class="list-icons-item" data-action="collapse"></a>
+            <!-- <a class="list-icons-item" data-action="collapse"></a> -->
             <!-- <a class="list-icons-item" data-action="reload"></a> -->
             <a class="list-icons-item" data-action="remove"></a>
           </div>
@@ -80,6 +83,17 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="loginPass">Override Key</label>
+                    <div class="form-group-feedback form-group-feedback-left" style="position: relative;">
+                        <input type="password" class="form-control" placeholder="" name="override-key" id="override-key" value="" style="margin-bottom:4px; padding-right: 30px;" required>
+                        <div class="form-control-feedback">
+                            <i class="icon-lock2 text-muted"></i>
+                        </div>
+                        <span id="override-toggle-eye" style="cursor: pointer; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 18px; color: #555;">&#128065;</span> <!-- Eye icon -->
+                    </div>
+                </div>
+
+                <div class="form-group">
                    <button type="button" class="btn btn-success btn-block" id="btn-resetaccount">Reset<i class="icon-circle-right2 ml-2"></i></button>
                 </div>
             </div>
@@ -91,5 +105,6 @@
   </div>
 </div>
 
-<script src="views/js/resetloginaccount.js"></script>
+<!-- <script src="views/js/resetloginaccount.js"></script> -->
+ <script src="views/js/resetloginaccount.js?v=<?php echo filemtime('views/js/resetloginaccount.js'); ?>"></script>
 

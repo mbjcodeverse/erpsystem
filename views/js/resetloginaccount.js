@@ -1,4 +1,13 @@
 $(function() {
+    $(document).on("click", '[data-action="remove"]', function (e) {
+        e.preventDefault();
+        let user_type = $("#user_type").val();
+        $(this).closest(".card").remove();
+        if (user_type == 'Cashier'){
+           window.location = 'cashier';
+        }
+    });
+
     $('input[type="text"], textarea').css('border', '1px solid rgba(255, 255, 255, 0.3)');
     $('input[type="password"], textarea').css('border', '1px solid rgba(255, 255, 255, 0.3)');
 
@@ -6,6 +15,7 @@ $(function() {
 
     $('#new-username').prop('disabled', true);
     $('#new-password').prop('disabled', true);
+    $('#override-key').prop('disabled', true);
     $('#btn-resetaccount').prop('disabled', true);
 
     $('#temp-username').focus();
@@ -45,6 +55,7 @@ $(function() {
 
                       $('#new-username').prop('disabled', false);
                       $('#new-password').prop('disabled', false);
+                      $('#override-key').prop('disabled', false);
                       $('#btn-resetaccount').prop('disabled', false);
 
                       $('#new-username').focus();
@@ -66,78 +77,130 @@ $(function() {
     }); 
 
     $("#btn-resetaccount").click(function(){
-      swal.fire({
-        title: 'Do you want to reset your login credential?',
-        type: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, reset!',
-        cancelButtonText: 'No',
-        confirmButtonClass: 'btn btn-outline-success',
-        cancelButtonClass: 'btn btn-outline-danger',
-        allowOutsideClick: false,
-        buttonsStyling: false
-      }).then(function(result) {
-        if(result.value) {  
-            reset_account();
+        let newUsername = $("#new-username").val().trim();
+        let newPassword = $("#new-password").val().trim();
+        let overrideKey = $("#override-key").val().trim();
+
+        if (newUsername === '' && newPassword === '' && overrideKey === '') {
+            swal.fire({
+                title: 'Username, Password, and Override Key must not be empty!',
+                type: 'warning',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return;
         }
-      });
+
+        if (newUsername === '' && newPassword != '') {
+            swal.fire({
+                title: 'Username must not be empty!',
+                type: 'warning',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return;
+        }
+
+        if (newUsername != '' && newPassword === '') {
+            swal.fire({
+                title: 'Password must not be empty!',
+                type: 'warning',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return;
+        }
+
+        swal.fire({
+            title: 'Do you want to reset your login credential?',
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, reset!',
+            cancelButtonText: 'No',
+            confirmButtonClass: 'btn btn-outline-success',
+            cancelButtonClass: 'btn btn-outline-danger',
+            allowOutsideClick: false,
+            buttonsStyling: false
+        }).then(function(result) {
+            if(result.value) {  
+                reset_account();
+            }
+        });
     }); 
     
     function reset_account(){
-      $("#btn-resetaccount").prop('disabled', true);  
-      var userid = $("#txt-userid").val();
-      var username = $("#new-username").val();
-      var password = $("#new-password").val();
-      var user = new FormData();
-      user.append("userid", userid);
-      user.append("username", username);
-      user.append("password", password);
-      $.ajax({
-        url:"ajax/reset_account.ajax.php",
-        method: "POST",
-        data: user,
-        cache: false,
-        contentType: false,
-        processData: false,
-        async: false,
-        dataType:"text",
-        success:function(answer){
-           $("#btn-save").prop('disabled', false);                        
-        },
-        error: function () {
-           alert("Oops. Something went wrong!");
-        },
-        complete: function () {
-           swal.fire({
-              title: 'User login credential successfully resetted!',
-              type: 'success',
-              allowOutsideClick: false,
-              showConfirmButton: false,
-              timer: 1500
-           })
-           $("#txt-userid").val('');
+        $("#btn-resetaccount").prop('disabled', true);  
+        let userid = $("#txt-userid").val();
 
-           $("#temp-username").val('');
-           $("#temp-password").val('');
+        var username = $("#new-username").val();
+        var password = $("#new-password").val();
+        var overridekey = $("#override-key").val();
 
-           $('#temp-username').prop('disabled', false);
-           $('#temp-password').prop('disabled', false);
-           $('#btn-validate').prop('disabled', false);
-
-           $("#new-username").val('');
-           $("#new-password").val('');
-
-           $('#new-username').prop('disabled', true);
-           $('#new-password').prop('disabled', true);
-           $('#btn-resetaccount').prop('disabled', true);
-
-           $('#password-strength-label').hide();
-           $('#strength-level').css('width', '0');
-           $('#strength-level').css('background-color', '#fff');
-       
-           $('#temp-username').focus();
+        if (username == ''){
+            username = $('#temp-username').val();
+            password = $('#temp-password').val();
         }
-      })   	
+
+        let user = new FormData();
+        user.append("userid", userid);
+        user.append("username", username);
+        user.append("password", password);
+        user.append("overridekey", overridekey);
+        $.ajax({
+            url:"ajax/reset_account.ajax.php",
+            method: "POST",
+            data: user,
+            cache: false,
+            contentType: false,
+            processData: false,
+            async: false,
+            dataType:"text",
+            success:function(answer){
+                $("#btn-save").prop('disabled', false);                        
+            },
+            error: function () {
+                alert("Oops. Something went wrong!");
+            },
+            complete: function () {
+                swal.fire({
+                    title: 'User login credential successfully resetted!',
+                    type: 'success',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                $("#txt-userid").val('');
+
+                $("#temp-username").val('');
+                $("#temp-password").val('');
+
+                $('#temp-username').prop('disabled', false);
+                $('#temp-password').prop('disabled', false);
+                $('#btn-validate').prop('disabled', false);
+
+                $("#new-username").val('');
+                $("#new-password").val('');
+
+                $('#new-username').prop('disabled', true);
+                $('#new-password').prop('disabled', true);
+                $('#btn-resetaccount').prop('disabled', true);
+
+                $('#password-strength-label').hide();
+                $('#strength-level').css('width', '0');
+                $('#strength-level').css('background-color', '#fff');
+            
+                $('#temp-username').focus();
+
+                let user_type = $("#user_type").val();
+                $(this).closest(".card").remove();
+                if (user_type == 'Cashier'){
+                  window.location = 'cashier';
+                }
+            }
+        })   	
     }
 
     $('#new-username, #new-password').focus(function() {
@@ -238,6 +301,19 @@ $(function() {
 
     $('#temp-toggle-eye').on('click', function () {
         var passwordField = $('#temp-password');
+        var fieldType = passwordField.attr('type');
+
+        if (fieldType === 'password') {
+          passwordField.attr('type', 'text');
+          $(this).html('&#128064;');  // Change icon to open eye
+        } else {
+          passwordField.attr('type', 'password');
+          $(this).html('&#128065;');  // Change icon to closed eye
+        }
+    });
+
+    $('#override-toggle-eye').on('click', function () {
+        var passwordField = $('#override-key');
         var fieldType = passwordField.attr('type');
 
         if (fieldType === 'password') {

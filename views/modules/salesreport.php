@@ -43,9 +43,9 @@
                       <option value="1">Overall Sales Category</option>
                       <option value="2">Category + Product Description</option>
                       <option value="3">Sales Sequence Details</option>
-                    <optgroup label="BRANCH SALES COMPARISON">   
+                    <!-- <optgroup label="BRANCH SALES COMPARISON">   
                       <option value="8">Monthly Sales Matrix</option>  
-                      <option value="9">Daily Sales Plot</option>
+                      <option value="9">Daily Sales Plot</option> -->
                   </select>
                 </div>
 

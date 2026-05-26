@@ -87,6 +87,8 @@
 
   <script src="views/global_assets/js/plugins/media/fancybox.min.js"></script>
   <script src="views/global_assets/js/demo_pages/gallery.js"></script> 
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 </head>
 <!-- <body class="navbar-top" onload="pageLoader()"> -->
   <body class="navbar-top">

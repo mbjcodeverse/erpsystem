@@ -87,11 +87,12 @@ class ModelUserRights{
 			// $encryptpass = crypt($data["password"], '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
 			$encryptpass = $data["password"];
 
-			$stmt = $pdo->prepare("UPDATE userrights SET username = :username, upassword = :upassword WHERE userid = :userid");
+			$stmt = $pdo->prepare("UPDATE userrights SET username = :username, upassword = :upassword, overridekey = :overridekey WHERE userid = :userid");
 
             $stmt->bindParam(":userid", $data["userid"], PDO::PARAM_STR);
 			$stmt->bindParam(":username", $data["username"], PDO::PARAM_STR);
 			$stmt->bindParam(":upassword", $encryptpass, PDO::PARAM_STR);	
+			$stmt->bindParam(":overridekey", $data["overridekey"], PDO::PARAM_STR);
 			$stmt->execute();
 
 			$userid = $data["userid"];

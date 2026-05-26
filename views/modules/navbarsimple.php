@@ -110,9 +110,10 @@
           </a>
 
           <div class="dropdown-menu dropdown-menu-right">
-<!--             <a href="#" class="dropdown-item"><i class="icon-user-plus"></i> My profile</a>
+            <!-- <a href="#" class="dropdown-item"><i class="icon-user-plus"></i> My profile</a>
+            <div class="dropdown-divider"></div> -->
+            <a href="resetloginaccount" class="dropdown-item"><i class="icon-cog5"></i> Account Settings</a>
             <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item"><i class="icon-cog5"></i> Account settings</a> -->
             <a href="logout" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>
           </div>
         </li>
