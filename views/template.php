@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>POINT-OF-SALE SYSTEM</title>
+  <title>G168 POS</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.css" />
   <script src="https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.umd.js"></script>   
@@ -131,6 +131,7 @@
             $_GET["route"] == 'access' ||
             $_GET["route"] == 'products' ||
             $_GET["route"] == 'cashier' ||
+            $_GET["route"] == 'branches' ||
             $_GET["route"] == 'resetloginaccount' ||
             $_GET["route"] == 'default' ||
             $_GET["route"] == 'logout'){

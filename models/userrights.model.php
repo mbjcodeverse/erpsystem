@@ -19,7 +19,7 @@ class ModelUserRights{
 
 			// $encryptpass = crypt($data["upassword"], '$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');
 			$encryptpass = $data["upassword"];
-			$stmt = $pdo->prepare("INSERT INTO userrights(userid, empid, utype, invoices, receivable, reports, dashboard, clients, employees, bank, accessprivilege, username, upassword) VALUES (:userid, :empid, :utype, :invoices, :receivable, :reports, :dashboard, :clients, :employees, :bank, :accessprivilege, :username, :upassword)");	
+			$stmt = $pdo->prepare("INSERT INTO userrights(userid, empid, utype, invoices, receivable, reports, dashboard, clients, employees, bank, accessprivilege, username, upassword, overridekey, branchcode) VALUES (:userid, :empid, :utype, :invoices, :receivable, :reports, :dashboard, :clients, :employees, :bank, :accessprivilege, :username, :upassword, :overridekey, :branchcode)");	
 
 			$stmt->bindParam(":userid", $usercode, PDO::PARAM_STR);
 			$stmt->bindParam(":empid", $data["empid"], PDO::PARAM_STR);
@@ -34,6 +34,8 @@ class ModelUserRights{
             $stmt->bindParam(":accessprivilege", $data["accessprivilege"], PDO::PARAM_STR);
             $stmt->bindParam(":username", $data["username"], PDO::PARAM_STR);
             $stmt->bindParam(":upassword", $encryptpass, PDO::PARAM_STR);
+			$stmt->bindParam(":overridekey", $data["overridekey"], PDO::PARAM_STR);
+			$stmt->bindParam(":branchcode", $data["branchcode"], PDO::PARAM_STR);
 			$stmt->execute();	
 		    $pdo->commit();
 
@@ -182,4 +184,16 @@ class ModelUserRights{
 		$stmt = null;
 	}		
 
+	static public function mdlGetOverrideKey($override_key){
+		$pdo = (new Connection)->connect();
+		$stmt = $pdo->prepare("
+			SELECT userid, empid, utype, overridekey
+			FROM userrights
+			WHERE overridekey = :overridekey
+			LIMIT 1
+		");
+		$stmt->bindParam(":overridekey", $override_key, PDO::PARAM_STR);
+		$stmt->execute();
+		return $stmt->fetch(PDO::FETCH_ASSOC);
+	}
 }

@@ -18,4 +18,9 @@ class ControllerProducts{
 		$answer = (new ModelProducts)->mdlProductSearchList($categorycode, $brandcode, $vatdesc);
 		return $answer;
 	}	
+
+	static public function ctrBranchProductList($branchcode){
+		$answer = (new ModelProducts)->mdlBranchProductList($branchcode);
+		return $answer;
+	}
 }

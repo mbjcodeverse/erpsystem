@@ -137,6 +137,8 @@ $(function() {
         var userid = $("#txt-userid").val();
         var username = $("#txt-username").val();
         var upassword = $("#txt-upassword").val();
+        var overridekey = $("#txt-overridekey").val();
+        var branchcode = $("#sel-branchcode").val();
 
         var empid = $("#sel-empid").val();
         var utype = $("#sel-utype").val();
@@ -163,7 +165,9 @@ $(function() {
         user.append("bank", bank); 
         user.append("accessprivilege", accessprivilege);   
         user.append("username", username);
-        user.append("upassword", upassword);    
+        user.append("upassword", upassword);  
+        user.append("overridekey", overridekey);  
+        user.append("branchcode", branchcode);
         $.ajax({
            url:"ajax/user_rights_save_record.ajax.php",
            method: "POST",

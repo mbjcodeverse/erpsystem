@@ -132,7 +132,11 @@
                         echo '
                              <li class="nav-item"><a href="employees" class="nav-link">Employees</a></li>  
                         ';
-                      }          
+                      }     
+                      
+                      echo '
+                             <li class="nav-item"><a href="branches" class="nav-link">Branches</a></li>  
+                        ';
                       
                       // if($_SESSION["bank"] != 'Restricted'){     
                       //   echo '

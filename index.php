@@ -1,6 +1,9 @@
 <?php	
 require_once "controllers/template.controller.php";
 
+require_once "controllers/branch.controller.php";
+require_once "models/branch.model.php";
+
 require_once "controllers/employees.controller.php";
 require_once "models/employees.model.php";
 
@@ -36,6 +39,9 @@ require_once "models/measure.model.php";
 
 require_once "controllers/products.controller.php";
 require_once "models/products.model.php";
+
+require_once "controllers/reset.controller.php";
+require_once "models/reset.model.php";
 
 $template = new ControllerTemplate();
 $template -> ctrTemplate();

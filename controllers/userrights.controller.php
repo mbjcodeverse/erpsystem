@@ -42,6 +42,7 @@ class ControllerUserRights{
 					$_SESSION["empid"] = $answer["empid"];
 					$_SESSION["utype"] = $answer["utype"];
 					$_SESSION["userid"] = $answer["userid"];
+					$_SESSION["branchcode"] = $answer["branchcode"];
 					
 					$_SESSION["invoices"] = $answer["invoices"];
 					$_SESSION["clients"] = $answer["clients"];
@@ -96,6 +97,11 @@ class ControllerUserRights{
 
 	static public function ctrShowLoginReport($start_date, $end_date){
 		$answer = (new ModelUserRights)->mdlShowLoginReport($start_date, $end_date);
+		return $answer;
+	}
+
+	static public function ctrGetOverrideKey($override_key){
+		$answer = (new ModelUserRights)->mdlGetOverrideKey($override_key);
 		return $answer;
 	}
 }

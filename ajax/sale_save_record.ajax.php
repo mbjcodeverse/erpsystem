@@ -2,70 +2,87 @@
 require_once "../controllers/sale.controller.php";
 require_once "../models/sale.model.php";
 
-class salesEntry{
-  public $trans_type; 
-  public $invno;
-  public $receiptnum;
+class salesOrderEntry{ 
+  public $prefix;
+  public $userid;
+
+  public $branchcode;
   public $sdate;
+  public $stime;
   public $salemode;
   public $customercode;
+  public $soldto;
   public $status;
-  public $postedby;
+  public $vatable;
+  public $excempt;
+  public $vatamnt;
   public $amount;
   public $discount;
   public $netamount;
-  public $remarks;
+  public $postedby;
+  public $productlist;
 
-  public function salesEntrySave(){
-    $trans_type = $this->trans_type;
-    $invno = $this->invno;
-    $receiptnum = $this->receiptnum;
+  public function salesOrderEntrySave(){
+    $prefix = $this->prefix;
+    $userid = $this->userid;
+
+  	$branchcode = $this->branchcode;
   	$sdate = $this->sdate;
-    $salemode = $this->salemode;
-  	$customercode = $this->customercode;
-    $status = $this->status;
-  	$postedby = $this->postedby;
-    $amount = $this->amount;
-    $discount = $this->discount;
-    $netamount = $this->netamount;
-  	$remarks = $this->remarks;
+    $stime = $this->stime;
+  	$salemode = $this->salemode;
+    $customercode = $this->customercode;
+  	$soldto = $this->soldto;
+  	$status = $this->status;
+    $vatable = $this->vatable;
+    $excempt = $this->excempt;
+    $vatamnt = $this->vatamnt;
+  	$amount = $this->amount;
+  	$discount = $this->discount;
+  	$netamount = $this->netamount; 
+    $postedby = $this->postedby; 
+  	$productlist = $this->productlist;
 
-    $data = array("invno"=>$invno,
-                  "receiptnum"=>$receiptnum,
+    $data = array("branchcode"=>$branchcode,
+                  "prefix"=>$prefix,
+                  "userid"=>$userid,
                   "sdate"=>$sdate,
+                  "stime"=>$stime,
                   "salemode"=>$salemode,
                   "customercode"=>$customercode,
+                  "soldto"=>$soldto,
                   "status"=>$status,
-                  "postedby"=>$postedby,
+                  "vatable"=>$vatable,
+                  "excempt"=>$excempt,
+                  "vatamnt"=>$vatamnt,                  
                   "amount"=>$amount,
                   "discount"=>$discount,
                   "netamount"=>$netamount,
-                  "remarks"=>$remarks);
+                  "postedby"=>$postedby,
+                  "productlist"=>$productlist);
 
-    if ($trans_type == 'New'){
-      $answer = (new ControllerSale)->ctrAddSale($data);
-      echo $answer;
-    }else{
-      $answer = (new ControllerSale)->ctrEditSale($data);
-      echo $answer;
-    }
-
+    $answer = (new ControllerSale)->ctrAddSale($data);
+    echo $answer;
   }
 }
 
-$processSales = new salesEntry();
+$processSales = new salesOrderEntry();
 
-$processSales -> trans_type = $_POST["trans_type"];
-$processSales -> invno = $_POST["invno"];
-$processSales -> receiptnum = $_POST["receiptnum"];
+$processSales -> prefix = $_POST["prefix"];
+$processSales -> userid = $_POST["userid"];
+$processSales -> branchcode = $_POST["branchcode"];
 $processSales -> sdate = $_POST["sdate"];
+$processSales -> stime = $_POST["stime"];
 $processSales -> salemode = $_POST["salemode"];
 $processSales -> customercode = $_POST["customercode"];
+$processSales -> soldto = $_POST["soldto"];
 $processSales -> status = $_POST["status"];
-$processSales -> postedby = $_POST["postedby"];
+$processSales -> vatable = $_POST["vatable"];
+$processSales -> excempt = $_POST["excempt"];
+$processSales -> vatamnt = $_POST["vatamnt"];
 $processSales -> amount = $_POST["amount"];
 $processSales -> discount = $_POST["discount"];
 $processSales -> netamount = $_POST["netamount"];
-$processSales -> remarks = $_POST["remarks"];
+$processSales -> postedby = $_POST["postedby"];
+$processSales -> productlist = $_POST["productlist"];
 
-$processSales -> salesEntrySave();
+$processSales -> salesOrderEntrySave();

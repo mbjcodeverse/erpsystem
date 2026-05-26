@@ -9,7 +9,7 @@
             <div class="text-center mb-3">
               <img src="views/global_assets/images/poslogo.png" height="120">
               <!-- <h5 class="mb-0 paint-text" style="font-size: 2rem; font-weight: 600; color: #f8f9fa;">BACOLOD LUIS PAINT</h5> -->
-              <h5 class="mb-0" style="font-size: 2rem; font-weight: 600; color: transparent; background-image: linear-gradient(45deg, #f7e1ff, #b3f0ff, #f0f8d2, #ffebcc, #f7f7f7); background-clip: text; -webkit-background-clip: text;">POINT-OF-SALE SYSTEM</h5>
+              <h5 class="mb-0" style="font-size: 2rem; font-weight: 600; color: transparent; background-image: linear-gradient(45deg, #f7e1ff, #b3f0ff, #f0f8d2, #ffebcc, #f7f7f7); background-clip: text; -webkit-background-clip: text;">G168 SARI-SARI STORE</h5>
               <span class="d-block text-muted" style="font-size: 1.2rem; color: #9bff6e;">Enter user credential</span>
             </div>
             <div class="form-group form-group-feedback form-group-feedback-left" style="margin-bottom: 20px; position: relative;">

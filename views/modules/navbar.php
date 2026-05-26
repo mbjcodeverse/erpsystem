@@ -27,8 +27,8 @@
       <tr>
         <td width="75%">
           <h2 class="card-title my-3 my-md-0 ml-md-3 mr-md-auto" style="font-size: 1.5em; text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.8);">
-            <span style="color:cornsilk; font-family: 'Arial', sans-serif;">RETAIL TRANSACTION</span> 
-            <span style="color:#d4fff3;">&nbsp;MANAGEMENT SYSTEM</span>
+            <span style="color:cornsilk; font-family: 'Arial', sans-serif;">G168</span> 
+            <span style="color:#d4fff3;">&nbsp;SARI-SARI STORE</span>
           </h2> 
         </td>
         <td width="25%">

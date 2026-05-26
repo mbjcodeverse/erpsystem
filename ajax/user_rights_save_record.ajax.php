@@ -17,6 +17,8 @@ class userRightsEntry{
   public $accessprivilege;
   public $username;
   public $upassword;
+  public $overridekey;
+  public $branchcode;
 
   public function userRightsEntrySave(){
     $trans_type = $this->trans_type;
@@ -33,6 +35,8 @@ class userRightsEntry{
   	$accessprivilege = $this->accessprivilege;
     $username = $this->username;
     $upassword = $this->upassword;
+    $overridekey = $this->overridekey;
+    $branchcode = $this->branchcode;
 
     $data = array("userid"=>$userid,
                   "empid"=>$empid,
@@ -46,7 +50,9 @@ class userRightsEntry{
                   "bank"=>$bank,
                   "accessprivilege"=>$accessprivilege,
                   "username"=>$username,
-                  "upassword"=>$upassword);
+                  "upassword"=>$upassword,
+                  "overridekey"=>$overridekey,
+                  "branchcode"=>$branchcode);
 
     if ($trans_type == 'New'){
       $answer = (new ControllerUserRights)->ctrAddUserRights($data);
@@ -75,5 +81,7 @@ $inputUserRights -> bank = $_POST["bank"];
 $inputUserRights -> accessprivilege = $_POST["accessprivilege"];
 $inputUserRights -> username = $_POST["username"];
 $inputUserRights -> upassword = $_POST["upassword"];
+$inputUserRights -> overridekey = $_POST["overridekey"];
+$inputUserRights -> branchcode = $_POST["branchcode"];
 
 $inputUserRights -> userRightsEntrySave();

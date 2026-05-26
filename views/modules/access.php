@@ -10,6 +10,7 @@
         <input type="hidden" id="txt-userid" name="txt-userid" required> 
         <input type="hidden" id="txt-username" name="txt-username" required> 
         <input type="hidden" id="txt-upassword" name="txt-upassword" required> 
+        <input type="hidden" id="txt-overridekey" name="txt-overridekey" required>
         <input type="hidden" id="accessprivilege-access" name="accessprivilege-access" value="<?php echo $_SESSION["accessprivilege"];?>">
         <input type="hidden" id="superadmin-access" name="superadmin-access" value="<?php echo $_SESSION["userid"];?>">
 
@@ -24,7 +25,7 @@
 
       <div class="card-body">
         <div class="row">
-            <div class="col-sm-7">
+            <div class="col-sm-12">
                 <label for="sel-empid">USER FULL NAME</label>
                 <select data-placeholder="< Select Employee >" class="form-control select-search" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" data-fouc id="sel-empid" name="sel-empid" required>
                   <option value="" selected hidden disabled>&lt;&nbsp;Select Employee&nbsp;&gt;</option>
@@ -36,8 +37,23 @@
                   ?>
                 </select>              
             </div>
+        </div>  
 
-            <div class="col-sm-5 form-group">
+        <div class="row">
+            <div class="col-sm-6">
+              <label for="sel-branchcode">Branch</label>
+              <select data-placeholder="< Select Branch >" class="form-control select-search" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" id="sel-branchcode" name="sel-branchcode" required>
+                <option></option>
+                <?php
+                    $branches = (new ControllerBranch)->ctrShowBranchList();
+                    foreach ($branches as $key => $value) {
+                      echo '<option value="'.$value["branchcode"].'">'.$value["bname"].'</option>';
+                    }
+                 ?>
+              </select>
+            </div>
+
+            <div class="col-sm-6 form-group">
               <label for="sel-utype">User Type</label>
               <select data-placeholder="< Select Type >" class="form-control select" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" data-fouc id="sel-utype" name="sel-utype" required>
                 <option></option>
@@ -47,7 +63,7 @@
                 <option value="Cashier">Cashier</option>
               </select>
             </div>
-        </div>  
+        </div>
 
         <div class="row">                  
             <div class="col-sm-6 form-group">

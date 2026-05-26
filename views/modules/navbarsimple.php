@@ -24,7 +24,7 @@
         </li>
       </ul> -->
 
-      <!-- <input type="hidden" name="branch_code" id="branch_code" value="<?php echo $_SESSION["branchcode"];?>"> -->
+      <input type="hidden" name="branch_code" id="branch_code" value="<?php echo $_SESSION["branchcode"];?>">
 
       <h2 class="card-title my-3 my-md-0 ml-md-3 mr-md-auto" style="color:#f6fae8;font-size: 1.5em;" id="current_branch"></h2>
 
@@ -119,6 +119,26 @@
       </ul>
     </div>
   </div>
+
+  <script>
+  function updateDateTime() {
+    const dateElement = document.getElementById("current_date");
+    const optionsDate = { month: 'long', day: 'numeric', year: 'numeric' };
+    const optionsTime = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+    
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('en-US', optionsDate);
+    const formattedTime = now.toLocaleTimeString('en-US', optionsTime);
+
+    // Combine date and time with | separator
+    const formattedDateTime = `${formattedDate} | ${formattedTime}`;
+
+    dateElement.textContent = formattedDateTime;
+  }
+
+  setInterval(updateDateTime, 1000); // Update date and time every second
+  updateDateTime(); // Initial call to set date/time
+</script>
   <!-- /main navbar -->
 
   <script src="views/js/navbar.js"></script> 

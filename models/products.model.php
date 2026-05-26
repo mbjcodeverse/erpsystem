@@ -96,8 +96,17 @@ class ModelProducts{
 			$stmt->bindParam(":disprice", $data["disprice"], PDO::PARAM_STR);
 			$stmt->bindParam(":minqty", $data["minqty"], PDO::PARAM_STR);
 			$stmt->bindParam(":prodname", $data["prodname"], PDO::PARAM_STR);
-
 			$stmt->execute();  
+
+			$branch_products = $pdo->prepare("UPDATE productsbranch SET isactive = :isactive,
+																		ucost = :ucost,
+																		uprice = :uprice
+																	WHERE prodid = :prodid");
+			$branch_products->bindParam(":prodid", $data["prodid"], PDO::PARAM_STR);
+			$branch_products->bindParam(":ucost", $data["ucost"], PDO::PARAM_STR);
+			$branch_products->bindParam(":uprice", $data["uprice"], PDO::PARAM_STR);
+			$branch_products->bindParam(":isactive", $data["isactive"], PDO::PARAM_STR);
+			$branch_products->execute();
 
 		    $pdo->commit();
 		    return $productcode;
@@ -152,4 +161,36 @@ class ModelProducts{
 		$stmt = null;
 		return $result ?: null;
 	}
+
+	public static function mdlBranchProductList(string $branchcode): array{
+		try {
+			$conn = (new Connection)->connect();
+			$sql = "SELECT 
+					p.prodid,
+					p.prodname,
+					p.barcode,
+					bp.uprice,
+					bp.ucost,
+					(bp.uprice - bp.ucost) AS profit,
+					p.disprice,
+					p.minqty,
+					p.vatdesc
+				FROM products p
+				INNER JOIN productsbranch bp 
+					ON p.prodid = bp.prodid
+				WHERE bp.branchcode = :branchcode
+				ORDER BY p.prodname";
+
+			$stmt = $conn->prepare($sql);
+			$stmt->bindParam(':branchcode', $branchcode, PDO::PARAM_STR);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			error_log($e->getMessage());
+			return [];
+		} finally {
+			$stmt = null;
+			$conn = null;
+		}
+	}		
 }
