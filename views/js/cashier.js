@@ -264,17 +264,97 @@ $(function() {
     // -------------------------------------------------------------------------------------
     
     // Total Amount = Qty * Price
+    // $(".cashier-form").on("keydown keypress blur focus", "input.qty,input.uprice", function(){
+    //     let prodid = $(this).parent().parent().children(".qtyEntry").children().attr("prodid");
+
+    //     let q = $(this).parent().parent().children(".qtyEntry").children().val();
+    //     let quantity = q.replaceAll(",","");
+
+    //     let p = $(this).parent().parent().children(".priceEntry").children().val();
+    //     let price = p.replaceAll(",","");   
+
+    //     // CHECK IF QUANTITY EXCEEDS 9999
+    //     if (quantity > 9999.00) {
+    //         swal.fire({
+    //             title: 'Quantity exceeded, reverted input to zero!',
+    //             type: 'info',
+    //             allowOutsideClick: false,
+    //             showConfirmButton: false,
+    //             timer: 3000
+    //         });
+    //         quantity = 0.00;
+
+    //         // SET INPUT VALUE TO 0.00
+    //         $(this).parent().parent()
+    //             .children(".qtyEntry")
+    //             .children()
+    //             .val("0.00");
+    //     }
+
+    //     let totalAmount = quantity * price;
+        
+    //     let productAmount = $(this).parent().parent().children(".totalAmount").children(".tamount");
+    //     productAmount.val(numberWithCommas(totalAmount.toFixed(2)));
+
+    //     _gblBindNumericClasses('numeric'); 
+
+    //     addingTotalPrices();
+    //     listProducts(); 
+    // }); 
+
     $(".cashier-form").on("keydown keypress blur focus", "input.qty,input.uprice", function(){
-        let prodid = $(this).parent().parent().children(".qtyEntry").children().attr("prodid");
+        let prodid = $(this)
+            .parent()
+            .parent()
+            .children(".qtyEntry")
+            .children()
+            .attr("prodid");
 
-        let q = $(this).parent().parent().children(".qtyEntry").children().val();
-        let quantity = q.replaceAll(",","");
+        // Quantity
+        let q = $(this)
+            .parent()
+            .parent()
+            .children(".qtyEntry")
+            .children()
+            .val();
 
-        let p = $(this).parent().parent().children(".priceEntry").children().val();
-        let price = p.replaceAll(",","");   
+        let quantity = parseFloat(q.replaceAll(",","")) || 0;
+
+        // Current Price
+        let p = $(this)
+            .closest("tr")
+            .find("input.uprice")
+            .val();
+
+        let price = parseFloat(p.replaceAll(",","")) || 0;
+
+        // Discount Price
+        let d = $(this)
+            .closest("tr")
+            .find("input.disprice")
+            .val();
+
+        let disprice = parseFloat(d.replaceAll(",","")) || 0;
+
+        // Original Price
+        let o = $(this)
+            .closest("tr")
+            .find("input.origprice")
+            .val();
+
+        let origprice = parseFloat(o.replaceAll(",","")) || 0;
+
+        // Minimum Qty
+        let m = $(this)
+            .closest("tr")
+            .find("input.minqty")
+            .val();
+
+        let minqty = parseFloat(m.replaceAll(",","")) || 0;
 
         // CHECK IF QUANTITY EXCEEDS 9999
         if (quantity > 9999.00) {
+
             swal.fire({
                 title: 'Quantity exceeded, reverted input to zero!',
                 type: 'info',
@@ -282,64 +362,130 @@ $(function() {
                 showConfirmButton: false,
                 timer: 3000
             });
+
             quantity = 0.00;
 
-            // SET INPUT VALUE TO 0.00
-            $(this).parent().parent()
-                .children(".qtyEntry")
-                .children()
+            $(this)
+                .closest("tr")
+                .find(".qty")
                 .val("0.00");
         }
 
-        let totalAmount = quantity * price;
-        
-        let productAmount = $(this).parent().parent().children(".totalAmount").children(".tamount");
-        productAmount.val(numberWithCommas(totalAmount.toFixed(2)));
+        // AUTO CHANGE PRICE
+        if (quantity >= minqty && minqty > 0) {
+            // Use discount/wholesale price
+            $(this)
+                .closest("tr")
+                .find("input.uprice")
+                .val(numberWithCommas(disprice.toFixed(2)))
+                .css({
+                    "background-color": "#c7520e",
+                    "color": "white",
+                    "border": "2px solid white"
+                });
 
-        _gblBindNumericClasses('numeric'); 
+            price = disprice;
 
-        addingTotalPrices();
-        listProducts(); 
-    }); 
+        } else {
+            // Restore original price
+            $(this)
+                .closest("tr")
+                .find("input.uprice")
+                .val(numberWithCommas(origprice.toFixed(2)))
+                .css({
+                    "background-color": "#2e3547",
+                    "color": "white",
+                    "border": "1px solid rgba(255,255,255,0.4)"
+                });
 
-    // Whole sale...
-    $(".cashier-form").on("blur", "input.price", function(){
-        // Quantity
-        let q = $(this).parent().parent().children(".qtyEntry").children().val();
-        let quantity = q.replaceAll(",","");
-
-        // Price
-        let p = $(this).parent().parent().children(".priceEntry").children().val();
-        let uprice = p.replaceAll(",","");   
-
-        // Discount
-        let d = $(this).closest("tr").find("input.disprice").val();
-        let discount = d.replaceAll(",",""); 
-
-        // Original Price
-        let o = $(this).closest("tr").find("input.oprice").val();
-        let oprice = o.replaceAll(",",""); 
-
-        if ((oprice - price )> discount){
-            $(this).parent().parent().children(".priceEntry").children().val(oprice);
-            var totalAmount = quantity * oprice;
-        
-            var productAmount = $(this).parent().parent().children(".totalAmount").children(".tamount");
-            productAmount.val(numberWithCommas(totalAmount.toFixed(2)));
-            swal.fire({
-                title: `Original price has been restored to Php ${oprice}<br>Allowable discount amount is Php ${discount} only.`,
-                type: 'warning',
-                confirmButtonText: 'Got it!',
-                confirmButtonClass: 'btn btn-outline-danger',
-                allowOutsideClick: false,
-                buttonsStyling: false
-            });
+            price = origprice;
         }
 
-        _gblBindNumericClasses('numeric'); 
+        // COMPUTE TOTAL
+        let totalAmount = quantity * price;
+
+        let productAmount = $(this)
+            .parent()
+            .parent()
+            .children(".totalAmount")
+            .children(".tamount");
+
+        productAmount.val(numberWithCommas(totalAmount.toFixed(2)));
+        _gblBindNumericClasses('numeric');
         addingTotalPrices();
-        listProducts(); 
-    }); 
+        listProducts();
+    });
+
+    // RIGHT CLICK QTY = VIEW WHOLESALE INFO
+    $(".cashier-form").on("contextmenu", "input.qty", function(e){
+        e.preventDefault();
+
+        let $row = $(this).closest("tr");
+
+        let prodname = $row.find(".prodname").val();
+        let origprice = parseFloat($row.find(".origprice").val()) || 0;
+        let minqty = parseFloat($row.find(".minqty").val()) || 0;
+        let disprice = parseFloat($row.find(".disprice").val()) || 0;
+
+        // ONLY SHOW IF MAY WHOLESALE
+        if (minqty <= 0) {
+            return;
+        }
+
+        swal.fire({
+            title: 'WHOLESALE DETAILS',
+            html:
+                '<br><div style="text-align:center;font-size:16px;">' +
+                    '<p>Product : ' + prodname + '</p>' +
+                    '<p>Original Price : ₱ ' + numberWithCommas(origprice.toFixed(2)) + '</p>' +
+                    '<p>Minimum Qty : ' + minqty + '</p>' +
+                    '<p>Discount Price : ₱ ' + numberWithCommas(disprice.toFixed(2)) + '</p>' +
+                '</div>',
+            type: 'info',
+            confirmButtonText: 'Close',
+            confirmButtonClass: 'btn btn-outline-success',
+            buttonsStyling: false
+        });
+    });
+
+    // // Whole sale...
+    // $(".cashier-form").on("blur", "input.price", function(){
+    //     // Quantity
+    //     let q = $(this).parent().parent().children(".qtyEntry").children().val();
+    //     let quantity = q.replaceAll(",","");
+
+    //     // Price
+    //     let p = $(this).parent().parent().children(".priceEntry").children().val();
+    //     let uprice = p.replaceAll(",","");   
+
+    //     // Discount
+    //     let d = $(this).closest("tr").find("input.disprice").val();
+    //     let discount = d.replaceAll(",",""); 
+
+    //     // Original Price
+    //     let o = $(this).closest("tr").find("input.oprice").val();
+    //     let oprice = o.replaceAll(",",""); 
+
+    //     if ((oprice - price )> discount){
+    //         $(this).parent().parent().children(".priceEntry").children().val(oprice);
+    //         var totalAmount = quantity * oprice;
+        
+    //         var productAmount = $(this).parent().parent().children(".totalAmount").children(".tamount");
+    //         productAmount.val(numberWithCommas(totalAmount.toFixed(2)));
+    //         swal.fire({
+    //             title: `Original price has been restored to Php ${oprice}<br>Allowable discount amount is Php ${discount} only.`,
+    //             type: 'warning',
+    //             confirmButtonText: 'Got it!',
+    //             confirmButtonClass: 'btn btn-outline-danger',
+    //             allowOutsideClick: false,
+    //             buttonsStyling: false
+    //         });
+    //     }
+
+    //     _gblBindNumericClasses('numeric'); 
+    //     addingTotalPrices();
+    //     listProducts(); 
+    // }); 
 
     // Removal of selected item ----------------------------------------------------------------
     var idRemoveProduct = [];
