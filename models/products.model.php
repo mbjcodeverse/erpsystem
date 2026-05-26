@@ -38,6 +38,26 @@ class ModelProducts{
 			$stmt->bindParam(":prodname", $data["prodname"], PDO::PARAM_STR);
 			$stmt->execute();
 
+			$branches = $pdo->prepare("SELECT * FROM branch");
+            $branches->execute();
+		    $branch = $branches -> fetchAll(PDO::FETCH_ASSOC);
+		    if(count($branch)!=0){
+		    	for($i = 0; $i < count($branch); $i++){
+		    	  $branchcode = $branch[$i]['branchcode'];
+		    	  $branchprod = $branch[$i]['branchcode'].$prodid[0]['gen_id'];
+
+		    	  $bp = $pdo->prepare("INSERT INTO branchproducts(prodid, isactive, ucost, uprice, branchcode, branchprod) VALUES (:prodid, :isactive, :ucost, :uprice, :branchcode, :branchprod)");
+
+		    	  $bp->bindParam(":prodid", $prodid[0]['gen_id'], PDO::PARAM_STR);
+		    	  $bp->bindParam(":isactive", $data["isactive"], PDO::PARAM_INT);
+				  $bp->bindParam(":ucost", $data["ucost"], PDO::PARAM_STR);
+		    	  $bp->bindParam(":uprice", $data["uprice"], PDO::PARAM_STR);
+		    	  $bp->bindParam(":branchcode", $branchcode, PDO::PARAM_STR);
+		    	  $bp->bindParam(":branchprod", $branchprod, PDO::PARAM_STR);
+		    	  $bp->execute();
+		    	}
+		    }
+
 		    $pdo->commit();
 		    return $productcode;
 		}catch (Exception $e){

@@ -676,6 +676,7 @@ $(function() {
         var priceamount = $(".uprice");
         var totalamount = $(".tamount");
         var vatdescription = $(".vatdesc");
+        var orig_price = $(".uprice");
 
         var vat_excempt = 0.00;
         var hasZeroQty = false;
@@ -688,6 +689,7 @@ $(function() {
                 var txt_uprice = $(priceamount[i]).val();
                 var txt_tamount = $(totalamount[i]).val();
                 var vat_desc = $(vatdescription[i]).val();
+                var txt_origprice = $(orig_price[i]).val();
 
                 // Check if Qty or Price = 0.00
                 if ((txt_qty == "0.00")||!(txt_qty)||(txt_uprice == "0.00")){  
@@ -699,6 +701,7 @@ $(function() {
                 var ucost = parseFloat(txt_ucost.replaceAll(",",""));
                 var uprice = parseFloat(txt_uprice.replaceAll(",",""));
                 var tamount = parseFloat(txt_tamount.replaceAll(",",""));
+                var origprice = parseFloat(txt_origprice.replaceAll(",",""));
 
                 if (vat_desc == 'VAT-Exempt'){
                     vat_excempt = vat_excempt + tamount;
@@ -707,6 +710,7 @@ $(function() {
                 productList.push({"qty" : qty.toFixed(2),
                                   "ucost" : ucost.toFixed(2),
                                   "uprice" : uprice.toFixed(2),
+                                  "origprice" : origprice.toFixed(2),
                                   "tamount" : tamount.toFixed(2),
                                   "prodid" : $(description[i]).attr("prodid")})      
             }
@@ -774,6 +778,7 @@ $(function() {
                     '<input type="hidden" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control minqty" prodid="'+prodid+'" name="minqty" value="'+minqty+'" required disabled>'+
                     '<input type="hidden" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control vatdesc" prodid="'+prodid+'" name="vatdesc" value="'+vatdesc+'" required disabled>'+
                     '<input type="hidden" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control barcode" prodid="'+prodid+'" name="barcode" value="'+barcode+'" required disabled>'+
+                    '<input type="hidden" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control origprice" prodid="'+prodid+'" name="origprice" value="'+uprice+'" required disabled>'+
                 '</td>' +   
 
                 '<td class="totalAmount" width="15%" style="padding:2px;">'+
@@ -854,7 +859,6 @@ $(function() {
             async:false,       // prevent sales double entry
             success:function(answer){
                 let invno = answer;
-                alert(invno);
                 $("#invno").val(invno);
             },
             error: function () {

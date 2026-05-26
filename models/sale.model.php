@@ -63,21 +63,22 @@ class ModelSale{
             $stmt->bindParam(":productlist", $data["productlist"], PDO::PARAM_STR);
 			$stmt->execute();
 
-			// $resetted = 'F';
-			// $uploaded = 'F';
-			// $itemsList = json_decode($data["productlist"]);
-			// foreach($itemsList as $product){
-			// 	$items = $pdo->prepare("INSERT INTO salesitems(invno, qty, ucost, price, tamount, prodid, uploaded) VALUES (:invno, :qty, :ucost, :price, :tamount, :prodid, :uploaded)");
+			$resetted = 'F';
+			$uploaded = 'F';
+			$itemsList = json_decode($data["productlist"]);
+			foreach($itemsList as $product){
+				$items = $pdo->prepare("INSERT INTO salesitems(invno, qty, ucost, uprice, origprice, tamount, prodid, uploaded) VALUES (:invno, :qty, :ucost, :uprice, :origprice, :tamount, :prodid, :uploaded)");
 
-			// 	$items->bindParam(":invno", $salecode, PDO::PARAM_STR);
-			// 	$items->bindParam(":qty", $product->qty, PDO::PARAM_STR);
-			// 	$items->bindParam(":ucost", $product->ucost, PDO::PARAM_STR);
-			// 	$items->bindParam(":price", $product->price, PDO::PARAM_STR);
-			// 	$items->bindParam(":tamount", $product->tamount, PDO::PARAM_STR);
-			// 	$items->bindParam(":prodid", $product->prodid, PDO::PARAM_STR);
-			// 	$items->bindParam(":uploaded", $uploaded, PDO::PARAM_STR);
-			// 	$items->execute();
-			// }			
+				$items->bindParam(":invno", $salecode, PDO::PARAM_STR);
+				$items->bindParam(":qty", $product->qty, PDO::PARAM_STR);
+				$items->bindParam(":ucost", $product->ucost, PDO::PARAM_STR);
+				$items->bindParam(":uprice", $product->uprice, PDO::PARAM_STR);
+				$items->bindParam(":origprice", $product->origprice, PDO::PARAM_STR);
+				$items->bindParam(":tamount", $product->tamount, PDO::PARAM_STR);
+				$items->bindParam(":prodid", $product->prodid, PDO::PARAM_STR);
+				$items->bindParam(":uploaded", $uploaded, PDO::PARAM_STR);
+				$items->execute();
+			}			
 
 		    $pdo->commit();
 		    return $salecode;
