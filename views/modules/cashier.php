@@ -18,8 +18,11 @@
               <!-- Branch Prefix -->
               <input type="hidden" name="prefix" id="prefix" value="">
 
-              <!-- Branch Prefix -->
+              <!-- Order Code -->
               <input type="hidden" name="ordercode" id="ordercode" value="">
+
+              <!-- Invno -->
+              <input type="hidden" name="invno" id="invno" value="">
 
               <!-- Branch Name -->
               <input type="hidden" name="branch_name" id="branch_name" value="">  

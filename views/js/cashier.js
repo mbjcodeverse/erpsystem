@@ -619,6 +619,7 @@ $(function() {
     }
     
     function initialize(){
+        $("#invno").val('');
         $("#tns-soldto").val('');
 
         $(".enlisted_products").empty();
@@ -873,18 +874,19 @@ $(function() {
                     timer: 1500
                 });
 
-            // var invno = $("#invno").val();
-            // var cash_tendered = $("#cash-tendered").val();
-            // var change_amount = $("#change-amount").val();
-            // //window.open("extensions/tcpdf/pdf/salereceipt.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
+            let invno = $("#invno").val();
+            let cash_tendered = $("#cash-tendered").val();
+            let change_amount = $("#change-amount").val();
             
-            // var printWindow = window.open("extensions/tcpdf/pdf/salereceipt.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
-            // printWindow.onload = function() {
-            //     printWindow.print();
-            //     setTimeout(function() {
-            //         printWindow.close();
-            //     }, 5000);
-            // };
+            // window.open("reports/orderslip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
+            
+            var printWindow = window.open("reports/orderslip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
+            printWindow.onload = function() {
+                printWindow.print();
+                setTimeout(function() {
+                    printWindow.close();
+                }, 4000);
+            };
             
             
             $('#modal-bill-order').modal('hide');

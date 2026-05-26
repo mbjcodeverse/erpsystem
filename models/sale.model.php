@@ -89,6 +89,54 @@ class ModelSale{
 		$pdo = null;	
 		$stmt = null;
 	}  	
+
+	public static function mdlGetSale($invno){
+		$conn = (new Connection)->connect();
+
+		$stmt = $conn->prepare("
+			SELECT *
+			FROM sales
+			WHERE invno = :invno
+			LIMIT 1
+		");
+
+		$stmt->bindParam(':invno', $invno, PDO::PARAM_STR);
+		$stmt->execute();
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		$stmt = null;
+		$conn = null;
+		return $result;
+	}
+
+	public static function mdlGetSaleItems($invno){
+		try {
+			$conn = (new Connection)->connect();
+			$stmt = $conn->prepare("
+				SELECT 
+					si.qty,
+					si.ucost,
+					si.uprice,
+					si.tamount,
+					si.prodid,
+					p.prodname,
+					p.vatdesc
+				FROM salesitems AS si
+				INNER JOIN products AS p 
+					ON si.prodid = p.prodid
+				WHERE si.invno = :invno
+			");
+			$stmt->bindValue(':invno', $invno, PDO::PARAM_STR);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			error_log("Database Error: " . $e->getMessage());
+			return [];
+		} finally {
+			// Proper cleanup
+			$stmt = null;
+			$conn = null;
+		}
+	}
 }
 
 
