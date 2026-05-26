@@ -579,116 +579,116 @@ $(function() {
         });
     }
 
-    // function loadBranchProducts(){
-    //     let branchcode = $("#branch_code").val();
-    //     let product_list = new FormData();
-    //     product_list.append("branchcode", branchcode);
-    //     $.ajax({
-    //         url: "ajax/branch_product_list.ajax.php",
-    //         method: "POST",
-    //         data: product_list,
-    //         cache: false,
-    //         contentType: false,
-    //         processData: false,
-    //         dataType: "json",
-    //         success: function(answer){
-    //             // Clear table
-    //             pl.clear();
-    //             for(var i = 0; i < answer.length; i++) {
-
-    //                 let prod = answer[i];
-
-    //                 let prodid = prod.prodid;
-    //                 let prodname = prod.prodname;
-    //                 let barcode = prod.barcode;
-
-    //                 let uprice = numberWithCommas(prod.uprice);
-    //                 let ucost = numberWithCommas(prod.ucost);
-
-    //                 let disprice = prod.disprice;
-    //                 let minqty = parseFloat(prod.minqty);
-    //                 let vatdesc = prod.vatdesc;
-
-    //                 var button = `
-    //                     <button type='button'
-    //                         class='btn btn-outline btn-sm bg-green-400 border-green-400 text-green-400 btn-icon rounded-round border-2 ml-2 addProduct recoverButton'
-    //                         prodid='${prodid}'
-    //                         prodname='${prodname}'
-    //                         uprice='${uprice}'
-    //                         ucost='${ucost}'
-    //                         disprice='${disprice}'
-    //                         minqty='${minqty}'
-    //                         vatdesc='${vatdesc}'
-    //                         barcode='${barcode}'>
-    //                         <i class='icon-check'></i>
-    //                     </button>
-    //                 `;
-
-    //                 // Add row only
-    //                 let rowNode = pl.row.add([
-    //                     prodname,
-    //                     uprice,
-    //                     prodid,
-    //                     ucost,
-    //                     disprice,
-    //                     minqty,
-    //                     vatdesc,
-    //                     barcode,
-    //                     button
-    //                 ]).node();
-
-    //                 // Change row color
-    //                 if(minqty > 0){
-    //                     $(rowNode).css({
-    //                         "background-color": "rgba(255, 178, 99, 0.05)",
-    //                         "color": "#36f569",
-    //                         // "font-weight": "bold"
-    //                     });
-    //                 }
-    //             }
-    //             // Draw table ONCE
-    //             pl.draw();
-    //         }
-    //     });
-    // }  
-
     function loadBranchProducts(){
         let branchcode = $("#branch_code").val();
         let product_list = new FormData();
         product_list.append("branchcode", branchcode);
         $.ajax({
-            url:"ajax/branch_product_list.ajax.php",
+            url: "ajax/branch_product_list.ajax.php",
             method: "POST",
             data: product_list,
             cache: false,
             contentType: false,
             processData: false,
-            dataType:"json",
-            success:function(answer){
+            dataType: "json",
+            success: function(answer){
+                // Clear table
+                pl.clear();
                 for(var i = 0; i < answer.length; i++) {
+
                     let prod = answer[i];
+
                     let prodid = prod.prodid;
                     let prodname = prod.prodname;
                     let barcode = prod.barcode;
 
-                    let price_amount = prod.uprice;
-                    let uprice = numberWithCommas(price_amount);
-
-                    let ucost_amount = prod.ucost;
-                    let ucost = numberWithCommas(ucost_amount);
+                    let uprice = numberWithCommas(prod.uprice);
+                    let ucost = numberWithCommas(prod.ucost);
 
                     let disprice = prod.disprice;
-                    let minqty = prod.minqty;
-
+                    let minqty = parseFloat(prod.minqty);
                     let vatdesc = prod.vatdesc;
 
-                    var button = "<td><button type='button' class='btn btn-outline btn-sm bg-green-400 border-green-400 text-green-400 btn-icon rounded-round border-2 ml-2 addProduct recoverButton' prodid='"+prodid+"' prodname='"+prodname+"' uprice='"+uprice+"' ucost='"+ucost+"' disprice='"+disprice+"' minqty='"+minqty+"' vatdesc='"+vatdesc+"' barcode='"+barcode+"'><i class='icon-check'></i></button></td>";  
-                    pl.row.add([prodname, uprice, prodid, ucost, disprice, minqty, vatdesc, barcode, button]); 
+                    var button = `
+                        <button type='button'
+                            class='btn btn-outline btn-sm bg-green-400 border-green-400 text-green-400 btn-icon rounded-round border-2 ml-2 addProduct recoverButton'
+                            prodid='${prodid}'
+                            prodname='${prodname}'
+                            uprice='${uprice}'
+                            ucost='${ucost}'
+                            disprice='${disprice}'
+                            minqty='${minqty}'
+                            vatdesc='${vatdesc}'
+                            barcode='${barcode}'>
+                            <i class='icon-check'></i>
+                        </button>
+                    `;
+
+                    // Add row only
+                    let rowNode = pl.row.add([
+                        prodname,
+                        uprice,
+                        prodid,
+                        ucost,
+                        disprice,
+                        minqty,
+                        vatdesc,
+                        barcode,
+                        button
+                    ]).node();
+
+                    // Change row color
+                    if(minqty > 0){
+                        $(rowNode).css({
+                            "background-color": "rgba(255, 178, 99, 0.05)",
+                            "color": "#36f569",
+                            // "font-weight": "bold"
+                        });
+                    }
                 }
+                // Draw table ONCE
                 pl.draw();
             }
-        });  	
-    }
+        });
+    }  
+
+    // function loadBranchProducts(){
+    //     let branchcode = $("#branch_code").val();
+    //     let product_list = new FormData();
+    //     product_list.append("branchcode", branchcode);
+    //     $.ajax({
+    //         url:"ajax/branch_product_list.ajax.php",
+    //         method: "POST",
+    //         data: product_list,
+    //         cache: false,
+    //         contentType: false,
+    //         processData: false,
+    //         dataType:"json",
+    //         success:function(answer){
+    //             for(var i = 0; i < answer.length; i++) {
+    //                 let prod = answer[i];
+    //                 let prodid = prod.prodid;
+    //                 let prodname = prod.prodname;
+    //                 let barcode = prod.barcode;
+
+    //                 let price_amount = prod.uprice;
+    //                 let uprice = numberWithCommas(price_amount);
+
+    //                 let ucost_amount = prod.ucost;
+    //                 let ucost = numberWithCommas(ucost_amount);
+
+    //                 let disprice = prod.disprice;
+    //                 let minqty = prod.minqty;
+
+    //                 let vatdesc = prod.vatdesc;
+
+    //                 var button = "<td><button type='button' class='btn btn-outline btn-sm bg-green-400 border-green-400 text-green-400 btn-icon rounded-round border-2 ml-2 addProduct recoverButton' prodid='"+prodid+"' prodname='"+prodname+"' uprice='"+uprice+"' ucost='"+ucost+"' disprice='"+disprice+"' minqty='"+minqty+"' vatdesc='"+vatdesc+"' barcode='"+barcode+"'><i class='icon-check'></i></button></td>";  
+    //                 pl.row.add([prodname, uprice, prodid, ucost, disprice, minqty, vatdesc, barcode, button]); 
+    //             }
+    //             pl.draw();
+    //         }
+    //     });  	
+    // }
 
     function new_order(){
         $('div.dataTables_filter input').focus();
