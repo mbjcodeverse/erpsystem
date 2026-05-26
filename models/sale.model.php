@@ -137,6 +137,60 @@ class ModelSale{
 			$conn = null;
 		}
 	}
+
+	static public function mdlGenerateSalesReport($reptype, $branchcode, $start_date, $end_date, $categorycode, $salemode, $status){
+		if ($branchcode != ''){
+			$branch = " AND (s.branchcode = '$branchcode')";
+		}else{
+			$branch = "";
+		}
+
+		if ($categorycode != ''){
+			$category_code = " AND (c.categorycode = '$categorycode')";
+		}else{
+			$category_code = "";
+		}		
+
+		if ($status != ''){
+			if ($status == '[ Sold - Return ]'){
+			  $sale_status = " AND ((s.status = 'Sold') OR (s.status = 'Return'))";	
+			}else{
+			  $sale_status = " AND (s.status = '$status')";
+			}
+		}else{
+			$sale_status = "";
+		}
+
+		if ($salemode != ''){
+		    $sale_mode = " AND (s.salemode = '$salemode')";
+		}else{
+			$sale_mode = "";
+		}		
+
+		if(!empty($end_date)){
+			$dates = " AND (s.sdate BETWEEN '$start_date' AND '$end_date')";
+		}else{
+			$dates = "";
+		}					
+
+		$whereClause = "WHERE (s.invno != '')" . $branch . $sale_status . $sale_mode . $dates . $category_code;
+
+		if ($reptype == 1){
+			$stmt = (new Connection)->connect()->prepare("SELECT c.catdescription,
+																SUM(si.qty) as total_qty,
+																SUM(si.tamount) as total_amount,
+																SUM(si.ucost * ABS(si.qty)) as total_cost,
+																SUM((si.uprice - si.ucost) * ABS(si.qty)) as total_profit
+														   FROM category as c INNER JOIN products as p ON (c.categorycode = p.categorycode)
+														                      INNER JOIN salesitems as si ON (p.prodid = si.prodid)
+																			  INNER JOIN sales as s ON (s.invno = si.invno)
+												                 $whereClause GROUP BY c.catdescription WITH ROLLUP");
+			$stmt -> execute();
+			return $stmt -> fetchAll();
+			$stmt -> close();
+			$stmt = null;													 
+	    }
+	}
 }
 
 

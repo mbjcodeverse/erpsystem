@@ -14,4 +14,9 @@ class ControllerSale{
 		$products = (new ModelSale)->mdlGetSaleItems($invno);
 		return $products;
 	}
+
+	static public function ctrGenerateSalesReport($reptype, $branchcode, $start_date, $end_date, $categorycode, $salemode, $status){
+		$answer = (new ModelSale)->mdlGenerateSalesReport($reptype, $branchcode, $start_date, $end_date, $categorycode, $salemode, $status);
+		return $answer;
+	}
 }

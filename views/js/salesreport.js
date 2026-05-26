@@ -5,12 +5,12 @@ $(function() {
 
     $(".select-search").select2();
 
-    $('#lst_date_range').data('daterangepicker').setStartDate(moment('2010-01-01'));
+    $('#lst_date_range').data('daterangepicker').setStartDate(moment('2026-05-26'));
     $('#lst_date_range').data('daterangepicker').setEndDate(moment());
 
     $('#lst_date_range').daterangepicker({
         ranges:{
-          'All'           : [moment('2010-01-01'), moment()],
+          'All'           : [moment('2026-05-26'), moment()],
           'Today'         : [moment(),moment()],
           'Yesterday'     : [moment().subtract(1,'days'), moment().subtract(1,'days')],
           'Last 7 Days'   : [moment().subtract(6,'days'), moment()],
@@ -19,31 +19,38 @@ $(function() {
     });
 
     $("#lbl-lst-date-range").click(function(){
-        $('#lst_date_range').data('daterangepicker').setStartDate(moment('2010-01-01'));
+        $('#lst_date_range').data('daterangepicker').setStartDate(moment('2026-05-26'));
         $('#lst_date_range').data('daterangepicker').setEndDate(moment());
     });
 
-    $("#lbl-lst-customercode").click(function(){
-        $("#lst-customercode").val('').trigger('change');
+    $("#lbl-lst-branchcode").click(function(){
+        $("#lst-branchcode").val('').trigger('change');
     });
 
+    $("#lbl-lst-categorycode").click(function(){
+        $("#lst-categorycode").val('').trigger('change');
+    });
+    
     $("#lbl-lst-salemode").click(function(){
         $("#lst-salemode").val('').trigger('change');
+    });
+
+    $("#lbl-lst-status").click(function(){
+        $("#lst-status").val('').trigger('change');
     }); 
 
-    $('#lst-reptype, #lst-customercode, #lst-salemode, #lst_date_range').on("change", function() {
-        $("#btn-print-report").prop('disabled', false);
-        $("#btn-export").prop('disabled', false);
-
-        let reptype = $("#lst-reptype").val();
-        let customercode = $("#lst-customercode").val();
-        if (customercode == null){
-            customercode = '';
+    $('#lst-reptype, #lst-branchcode, #lst_date_range, #lst-categorycode, #lst-salemode, #lst-status').on("change", function() {
+        $(".sales_content").empty();
+        if ($('#lst-reptype').val() != ''){
+            $("#btn-print-report").prop('disabled', false);
+            $("#btn-export").prop('disabled', false);
+            $("#btn-generate").prop('disabled', false);
         }
-        let salemode = $("#lst-salemode").val();
-        // let status = $("#lst-status").val();
-        let status = 'Sold';
-        
+    });    
+    
+    $("#btn-generate").click(function(){
+        let reptype = $("#lst-reptype").val();
+        let branchcode = $("#lst-branchcode").val();
         var date_range = $("#lst_date_range").val();
         if (date_range != ''){
             var start_date = date_range.substring(6, 10) + '-' + date_range.substring(0, 2) + '-' + date_range.substring(3, 5);
@@ -52,22 +59,23 @@ $(function() {
             var start_date = '';
             var end_date = '';
         }
-        // let paystatus = $("#lst-paystatus").val();
-        let paystatus = '<All>';
+        let categorycode = $("#lst-categorycode").val();
+        let salemode = $("#lst-salemode").val();
+        let status = $("#lst-status").val();
 
-        // alert(customercode + ' ' + salemode + ' ' + start_date + ' ' + end_date + ' ' + status + ' ' + paystatus);
+        // alert(branchcode + ' ' + categorycode + ' ' + start_date + ' ' + end_date + ' ' + status + ' ' + salemode);
         
         var data = new FormData();
         data.append("reptype", reptype);
-        data.append("customercode", customercode);
-        data.append("salemode", salemode);
+        data.append("branchcode", branchcode);
         data.append("start_date", start_date);
         data.append("end_date", end_date);
+        data.append("categorycode", categorycode);
+        data.append("salemode", salemode);
         data.append("status", status);
-        data.append("paystatus", paystatus);
         
         $.ajax({
-            url: "ajax/salesreport_list.ajax.php",
+            url: "ajax/sales_report.ajax.php",
             method: "POST",
             data: data,
             cache: false,
@@ -75,57 +83,48 @@ $(function() {
             processData: false,
             dataType: "json",
             success: function(answer) {
-                $(".invoice_content").empty();
+                $(".sales_content").empty();
                 var html = [];
                 if (reptype == 1){
                     html.push('<div class="table-responsive" style="overflow-y: auto; max-height: 470px;">');
-                      html.push('<table class="table mx-auto w-auto">');
-                        html.push('<thead>');
-                          html.push('<tr>');
-                            html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Date</th>');
-                            html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;min-width:330px;">Customer</th>');
-                            html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Receipt #</th>');
-                            html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Sale Mode</th>');
-                            html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Amount</th>');
-                          html.push('</tr>');
-                        html.push('</thead>');
+                        html.push('<table class="table mx-auto w-auto">');
+                            html.push('<thead>');
+                                html.push('<tr>');
+                                    html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Category</th>');
+                                    html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Qty</th>');
+                                    html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Amount</th>');
+                                    html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Cost</th>');
+                                    html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Profit</th>');
+                                html.push('</tr>');
+                            html.push('</thead>');
 
-                        var total_amount = 0.00;
-                        for(var i = 0; i < answer.length; i++) {
-                            var si = answer[i];
-    
-                            var invno = si.invno;
-                            var name = si.name;
-                            var receiptnum = si.receiptnum;
-                            var salemode = si.salemode;
-                            var sale_date = si.sdate;
-                            var saledate = sale_date.split("-");
-                            var sdate = saledate[1] + "/" + saledate[2] + "/" + saledate[0];
-            
-                            var netamount = numberWithCommas(si.netamount);
-            
-                            total_amount += parseFloat(si.netamount);
-
-                            html.push('<tr>');
-                               html.push('<td style="text-align:left;">'+sdate+'</td>');
-                               html.push('<td>'+name+'</td>');
-                               html.push('<td style="text-align:left;">'+receiptnum+'</td>');
-                               html.push('<td style="text-align:left;">'+salemode+'</td>');
-                               html.push('<td style="text-align:right;border-left:1px solid white;">'+netamount+'</td>');
-                            html.push('</tr>');
-                        }
-
-                        if (i > 0){
-                            html.push('<tr>');
-                              html.push('<td colspan="4" style="text-align:right;border-top:2px solid white;font-size:1.3em;font-weight:bold;border-right:2px solid white;border-bottom:2px solid white">TOTAL AMOUNT</td>');
-                              html.push('<td style="text-align:right;border-top:2px solid white;font-size:1.3em;font-weight:bold;border-bottom:2px solid white">'+numberWithCommas(total_amount)+'</td>');
-                            html.push('</tr>');    
-                          }                    
-  
+                            for(var i = 0; i < answer.length; i++) {
+                                var sales = answer[i];
+                                var catdescription = sales.catdescription;
+                                var total_qty = numberWithCommas(sales.total_qty);
+                                var total_amount = numberWithCommas(sales.total_amount);
+                                var total_cost = numberWithCommas(sales.total_cost);
+                                var total_profit = numberWithCommas(sales.total_profit);
+                                html.push('<tr>');
+                                    if (i == answer.length - 1){
+                                        html.push('<td style="font-size:1.1em;font-weight:bold;border-top: 2px solid white;">OVERALL AMOUNT</td>');
+                                        html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+total_qty+'</td>');
+                                        html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+total_amount+'</td>');
+                                        html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;border-left: 2px solid white;color:#fc8677;">'+total_cost+'</td>');
+                                        html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;color:#0FFF50;">'+total_profit+'</td>');
+                                    }else{
+                                        html.push('<td>'+catdescription+'</td>');
+                                        html.push('<td style="text-align:right;">'+total_qty+'</td>');
+                                        html.push('<td style="text-align:right;">'+total_amount+'</td>');
+                                        html.push('<td style="text-align:right;border-left: 2px solid white;color:#fc8677;">'+total_cost+'</td>');
+                                        html.push('<td style="text-align:right;color:#0FFF50;">'+total_profit+'</td>');
+                                    }
+                                html.push('</tr>');
+                            }   
                         html.push('</table>');
-                    html.push('</div>');
+                  html.push('</div>');
                 }
-                $('.invoice_content').html(html.join('')); 
+                $('.sales_content').html(html.join('')); 
             }
         });
     });
@@ -134,27 +133,27 @@ $(function() {
         exportToExcel();
     });
     
-    $("#btn-print-report").click(function(){
-        let reptype = $("#lst-reptype").val();
-        let customercode = $("#lst-customercode").val();
-        if (customercode == null){
-            customercode = '';
-        }
-        let salemode = $("#lst-salemode").val();
-        let status = 'Sold';
+    // $("#btn-print-report").click(function(){
+    //     let reptype = $("#lst-reptype").val();
+    //     let branchcode = $("#lst-branchcode").val();
+    //     if (branchcode == null){
+    //         branchcode = '';
+    //     }
+    //     let categorycode = $("#lst-categorycode").val();
+    //     let status = 'Sold';
         
-        var date_range = $("#lst_date_range").val();
-        if (date_range != ''){
-            var start_date = date_range.substring(6, 10) + '-' + date_range.substring(0, 2) + '-' + date_range.substring(3, 5);
-            var end_date = date_range.substring(19, 23) + '-' + date_range.substring(13, 15) + '-' + date_range.substring(16, 18);
-        } else {
-            var start_date = '';
-            var end_date = '';
-        }
-        let generatedby = $("#tns-generatedby").val();
+    //     var date_range = $("#lst_date_range").val();
+    //     if (date_range != ''){
+    //         var start_date = date_range.substring(6, 10) + '-' + date_range.substring(0, 2) + '-' + date_range.substring(3, 5);
+    //         var end_date = date_range.substring(19, 23) + '-' + date_range.substring(13, 15) + '-' + date_range.substring(16, 18);
+    //     } else {
+    //         var start_date = '';
+    //         var end_date = '';
+    //     }
+    //     let generatedby = $("#tns-generatedby").val();
         
-        window.open("extensions/tcpdf/pdf/salesprint.php?reptype="+reptype+"&customercode="+customercode+"&salemode="+salemode+"&status="+status+"&start_date="+start_date+"&end_date="+end_date+"&generatedby="+generatedby, "_blank");
-    }); 
+    //     window.open("extensions/tcpdf/pdf/salesprint.php?reptype="+reptype+"&branchcode="+branchcode+"&categorycode="+categorycode+"&status="+status+"&start_date="+start_date+"&end_date="+end_date+"&generatedby="+generatedby, "_blank");
+    // }); 
 
     function exportToExcel() {
         var location = 'data:application/vnd.ms-excel;base64,';

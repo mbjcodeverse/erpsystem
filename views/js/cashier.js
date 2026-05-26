@@ -793,29 +793,29 @@ $(function() {
     }
 
     function bill_order(){
-        let prefix = $("#prefix").val();    //
-        let userid = $("#userid").val();    //
+        let prefix = $("#prefix").val();    
+        let userid = $("#userid").val();    
 
         let format_sdate = $("#date-sdate").val().split("/");
         format_sdate = format_sdate[2] + "-" + format_sdate[0] + "-" + format_sdate[1];
 
-        let branchcode = $("#branch_code").val(); //
-        let sdate = format_sdate; //
+        let branchcode = $("#branch_code").val(); 
+        let sdate = format_sdate; 
         let stime = getCurrentTime();  // helper.js
-        let salemode = 'Counter'; //
-        let customercode = ''; //
-        let soldto = $("#tns-soldto").val(); //
-        let status = 'Sold'; //
+        let salemode = 'Counter'; 
+        let customercode = ''; 
+        let soldto = $("#tns-soldto").val(); 
+        let status = 'Sold'; 
 
         // alert(prefix + ' ' + userid + ' ' + branchcode + ' ' + sdate + ' ' + stime + ' ' + salemode + ' ' + sellerid);
 
-        var txt_amount = $("#num-amount").val(); //
-        var txt_discount = $("#num-discount").val(); //
-        var txt_netamount = $("#num-netamount").val(); //
+        var txt_amount = $("#num-amount").val(); 
+        var txt_discount = $("#num-discount").val(); 
+        var txt_netamount = $("#num-netamount").val(); 
 
-        var txt_vatable = $("#num-vatable").val(); //
-        var txt_excempt = $("#num-excempt").val(); //
-        var txt_vatamnt = $("#num-vatamnt").val(); //
+        var txt_vatable = $("#num-vatable").val(); 
+        var txt_excempt = $("#num-excempt").val(); 
+        var txt_vatamnt = $("#num-vatamnt").val(); 
 
         var postedby = $("#tns-postedby").val();
         var productlist = $("#productList").val();

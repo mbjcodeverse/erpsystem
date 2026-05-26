@@ -65,13 +65,13 @@
             <!-- Transactions -->
             <li class="nav-item-header"><div class="text-uppercase font-size-xs line-height-xs">Transactions</div> <i class="icon-menu" title="Forms"></i></li>
 
-            <?php
+            <!-- <?php
               if($_SESSION["invoices"] != 'Restricted'){  
                 echo '
                   <li class="nav-item"><a href="sales" class="nav-link"><i class="icon-price-tags2"></i> <span>Invoices</span></a></li>     
                 '; 
               }                 
-            ?>
+            ?> -->
 
             <!-- <?php
               if($_SESSION["receivable"] != 'Restricted'){
@@ -89,7 +89,7 @@
                     <ul class="nav nav-group-sub" data-submenu-title="Text editors">';
                       // if($_SESSION["po"] == 1){  
                         echo '
-                            <li class="nav-item"><a href="salesreport" class="nav-link">Invoices</a></li>  
+                            <li class="nav-item"><a href="salesreport" class="nav-link">Sales</a></li>  
                         '; 
                         // echo '
                         //     <li class="nav-item"><a href="receivablereport" class="nav-link">Receivable</a></li>  
