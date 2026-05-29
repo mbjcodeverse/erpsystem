@@ -1,4 +1,5 @@
 <?php	
+ob_start();
 require_once "controllers/template.controller.php";
 
 require_once "controllers/branch.controller.php";
@@ -45,3 +46,10 @@ require_once "models/reset.model.php";
 
 $template = new ControllerTemplate();
 $template -> ctrTemplate();
+
+?>
+
+<?php
+// Flush output buffer at the very end
+ob_end_flush();
+?>

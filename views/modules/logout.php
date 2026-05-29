@@ -1,10 +1,30 @@
 <?php
-session_unset();
-// session_regenerate_id();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// clear session
+$_SESSION = [];
+
+// delete session cookie
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+
+    setcookie(
+        session_name(),
+        '',
+        time() - 42000,
+        $params["path"],
+        $params["domain"],
+        $params["secure"],
+        $params["httponly"]
+    );
+}
+
 session_destroy();
+?>
 
-echo '<script>
-
-	window.location = "login";
-
-</script>';
+<script>
+    window.location.href = "login";
+</script>

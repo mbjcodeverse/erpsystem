@@ -1,6 +1,7 @@
 <?php
-  session_start();
+session_start();
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -253,6 +254,41 @@
   $(".datepicker").datepicker();
   $(".datepicker").datepicker("option", "dateFormat", "mm/dd/yy");
 </script>
+
+<!-- <script>
+    const TAB_KEY = "g168_pos_active_tab";
+    const currentTab = Date.now() + "_" + Math.random();
+
+    function claimTab() {
+        const existing = localStorage.getItem(TAB_KEY);
+        if (existing && existing !== currentTab) {
+            alert("POS already open in another tab.");
+            window.location = "logout";
+            return false;
+        }
+        localStorage.setItem(TAB_KEY, currentTab);
+        return true;
+    }
+
+    // Initial check
+    claimTab();
+    // Keep ownership alive
+    setInterval(() => {
+        if (localStorage.getItem(TAB_KEY) !== currentTab) {
+            alert("System is already open in another tab!");
+            window.location = "logout";
+        } else {
+            localStorage.setItem(TAB_KEY, currentTab);
+        }
+    }, 1000);
+
+    // Cleanup
+    window.addEventListener("beforeunload", () => {
+        if (localStorage.getItem(TAB_KEY) === currentTab) {
+            localStorage.removeItem(TAB_KEY);
+        }
+    });
+</script> -->
 
 <!-- <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
 ({key: "AIzaSyCdiY40X_OEQS7BfG0TApCQW4PUURkur2M", v: "beta"});

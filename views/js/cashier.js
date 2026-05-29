@@ -24,6 +24,7 @@ if (!$.fn.DataTable.isDataTable('.transactionProductsTable')) {
 }
 
 $(function() {
+    _gblBindNumericClasses('numeric');
     // Move around ordered items table using arrow keys
     navigateOrderGrid();
     getBranchPrefixCode();
@@ -203,6 +204,16 @@ $(function() {
 
                 reset_search();
                 $(this).val('');
+            }else{
+                swal.fire({
+                    title: 'Barcode not found!',
+                    type: 'info',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                reset_search();
+                $(this).val('');
             }
         }
     });
@@ -354,7 +365,6 @@ $(function() {
 
         // CHECK IF QUANTITY EXCEEDS 9999
         if (quantity > 9999.00) {
-
             swal.fire({
                 title: 'Quantity exceeded, reverted input to zero!',
                 type: 'info',
@@ -362,9 +372,7 @@ $(function() {
                 showConfirmButton: false,
                 timer: 3000
             });
-
             quantity = 0.00;
-
             $(this)
                 .closest("tr")
                 .find(".qty")
@@ -397,7 +405,6 @@ $(function() {
                     "color": "white",
                     "border": "1px solid rgba(255,255,255,0.4)"
                 });
-
             price = origprice;
         }
 
@@ -421,7 +428,6 @@ $(function() {
         e.preventDefault();
 
         let $row = $(this).closest("tr");
-
         let prodname = $row.find(".prodname").val();
         let origprice = parseFloat($row.find(".origprice").val()) || 0;
         let minqty = parseFloat($row.find(".minqty").val()) || 0;
@@ -448,44 +454,6 @@ $(function() {
         });
     });
 
-    // // Whole sale...
-    // $(".cashier-form").on("blur", "input.price", function(){
-    //     // Quantity
-    //     let q = $(this).parent().parent().children(".qtyEntry").children().val();
-    //     let quantity = q.replaceAll(",","");
-
-    //     // Price
-    //     let p = $(this).parent().parent().children(".priceEntry").children().val();
-    //     let uprice = p.replaceAll(",","");   
-
-    //     // Discount
-    //     let d = $(this).closest("tr").find("input.disprice").val();
-    //     let discount = d.replaceAll(",",""); 
-
-    //     // Original Price
-    //     let o = $(this).closest("tr").find("input.oprice").val();
-    //     let oprice = o.replaceAll(",",""); 
-
-    //     if ((oprice - price )> discount){
-    //         $(this).parent().parent().children(".priceEntry").children().val(oprice);
-    //         var totalAmount = quantity * oprice;
-        
-    //         var productAmount = $(this).parent().parent().children(".totalAmount").children(".tamount");
-    //         productAmount.val(numberWithCommas(totalAmount.toFixed(2)));
-    //         swal.fire({
-    //             title: `Original price has been restored to Php ${oprice}<br>Allowable discount amount is Php ${discount} only.`,
-    //             type: 'warning',
-    //             confirmButtonText: 'Got it!',
-    //             confirmButtonClass: 'btn btn-outline-danger',
-    //             allowOutsideClick: false,
-    //             buttonsStyling: false
-    //         });
-    //     }
-
-    //     _gblBindNumericClasses('numeric'); 
-    //     addingTotalPrices();
-    //     listProducts(); 
-    // }); 
 
     // Removal of selected item ----------------------------------------------------------------
     var idRemoveProduct = [];
@@ -1027,6 +995,7 @@ $(function() {
         addingTotalPrices();
         listProducts();
         reset_search();
+        // _gblBindNumericClasses('numeric');
     }
 
     function bill_order(){
@@ -1124,6 +1093,13 @@ $(function() {
                     printWindow.close();
                 }, 4000);
             };
+
+            // window.open(
+            //     "reports/order_slip.php?invno=" + invno +
+            //     "&cash_tendered=" + cash_tendered +
+            //     "&change_amount=" + change_amount,
+            //     "_blank"
+            // );
             
             
             $('#modal-bill-order').modal('hide');

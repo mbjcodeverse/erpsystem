@@ -36,6 +36,8 @@ class ControllerUserRights{
 				$answer = (new ModelUserRights)->mdlGetUserCredentials($table, $item, $value);
 
 				if(!empty($answer) && $answer["username"] == $_POST["loginUser"] && $answer["upassword"] == $encryptpass){
+					session_regenerate_id(true);
+
 					$_SESSION["loggedIn"] = "ok";
 					$_SESSION["id"] = $answer["id"];
 					

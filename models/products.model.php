@@ -44,11 +44,11 @@ class ModelProducts{
 		    if(count($branch)!=0){
 		    	for($i = 0; $i < count($branch); $i++){
 		    	  $branchcode = $branch[$i]['branchcode'];
-		    	  $branchprod = $branch[$i]['branchcode'].$prodid[0]['gen_id'];
+		    	  $branchprod = $branch[$i]['branchcode'].$productcode;
 
-		    	  $bp = $pdo->prepare("INSERT INTO branchproducts(prodid, isactive, ucost, uprice, branchcode, branchprod) VALUES (:prodid, :isactive, :ucost, :uprice, :branchcode, :branchprod)");
+		    	  $bp = $pdo->prepare("INSERT INTO productsbranch(prodid, isactive, ucost, uprice, branchcode, branchprod) VALUES (:prodid, :isactive, :ucost, :uprice, :branchcode, :branchprod)");
 
-		    	  $bp->bindParam(":prodid", $prodid[0]['gen_id'], PDO::PARAM_STR);
+		    	  $bp->bindParam(":prodid", $productcode, PDO::PARAM_STR);
 		    	  $bp->bindParam(":isactive", $data["isactive"], PDO::PARAM_INT);
 				  $bp->bindParam(":ucost", $data["ucost"], PDO::PARAM_STR);
 		    	  $bp->bindParam(":uprice", $data["uprice"], PDO::PARAM_STR);
