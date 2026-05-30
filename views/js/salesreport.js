@@ -1,4 +1,5 @@
 $(function() {
+    alert('Sales Report');
     $(".select").select2({
         minimumResultsForSearch: Infinity,
     });
