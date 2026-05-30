@@ -1,5 +1,4 @@
 $(function() {
-    alert('Sales Report');
     $(".select").select2({
         minimumResultsForSearch: Infinity,
     });
@@ -84,6 +83,7 @@ $(function() {
             processData: false,
             dataType: "json",
             success: function(answer) {
+                alert("Report");
                 $(".sales_content").empty();
                 var html = [];
                 if (reptype == 1){
