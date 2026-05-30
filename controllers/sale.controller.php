@@ -19,4 +19,14 @@ class ControllerSale{
 		$answer = (new ModelSale)->mdlGenerateSalesReport($reptype, $branchcode, $start_date, $end_date, $categorycode, $salemode, $status);
 		return $answer;
 	}
+
+	static public function ctrPrintCashierReset($resetcode, $resetdetail, $resetype){
+		$answer = (new ModelSale)->mdlPrintCashierReset($resetcode, $resetdetail, $resetype);
+		return $answer;
+	}	
+
+	static public function ctrResetPreview($branchcode, $postedby, $reset_detail, $sale_mode){
+		$answer = (new ModelSale)->mdlResetPreview($branchcode, $postedby, $reset_detail, $sale_mode);
+		return $answer;
+	}
 }

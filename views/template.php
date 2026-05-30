@@ -245,10 +245,10 @@ session_start();
   _gblBindNumericClasses('numeric');
 </script>
 
-<!-- <script src="views/js/script.numeric_key_binding_3dec.js"></script>
+<script src="views/js/script.numeric_key_binding_3dec.js"></script>
 <script>
-  _gblBindNumericClasses3dec('numeric3dec');
-</script> -->
+  _gblBindNumericClasses3dec('numeric3');
+</script>
 
 <script>
   $(".datepicker").datepicker();

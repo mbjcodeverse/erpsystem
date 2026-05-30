@@ -49,7 +49,7 @@ class printOrderSlip{
         $height = $pdf->pixelsToUnits(600);
 
         $resolution= array($width, $height);
-        $pdf->SetMargins(1, 0, 8, true);
+        $pdf->SetMargins(7, 0, 4, true);
 
         $pdf->AddPage('P', $resolution);
 
@@ -145,6 +145,8 @@ class printOrderSlip{
 
         // Print once
         $pdf->writeHTML($html, true, false, true, false, '');
+        // Auto-print PDF
+        $pdf->IncludeJS('print(true);');
         $pdf->Output('orderslip.pdf', 'I');
     }
 }

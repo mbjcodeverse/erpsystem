@@ -1,125 +1,165 @@
 <?php
 
-$invno = $_GET['invno'];
-$cash_tendered = $_GET['cash_tendered'];
-$change_amount = $_GET['change_amount'];
+require_once "../controllers/sale.controller.php";
+require_once "../models/sale.model.php";
 
-// fetch items from database here
+require_once "../controllers/employees.controller.php";
+require_once "../models/employees.model.php";
+
+$invno = $_GET["invno"];
+$cash_tendered = $_GET["cash_tendered"];
+$change_amount = $_GET["change_amount"];
+
+$sale = (new ControllerSale)->ctrGetSale($invno);
+$salesitems = (new ControllerSale)->ctrGetSaleItems($invno);
+
+$nRec = count($salesitems) . ' item(s)';
+
+$sale_date = $sale['sdate'];
+$sdate = substr($sale_date,5,2)."/".substr($sale_date,8,2)."/".substr($sale_date,0,4);
+
+$stime = $sale['stime'];
+
+$amount = number_format($sale['amount'],2);
+$discount = number_format($sale['discount'],2);
+$netamount = number_format($sale['netamount'],2);
+
+$postedby = $sale['postedby'];
+
+$cashier = (new ControllerEmployees)->ctrEmployeeInfo($postedby);
+$cashier_name = $cashier['fname'].' '.$cashier['lname'];
 
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Receipt</title>
+<meta charset="utf-8">
 
-    <style>
+<title>Order Slip</title>
 
-        body{
-            font-family: monospace;
-            width: 280px;
-            margin:0 auto;
-            font-size:12px;
-        }
+<style>
 
-        .center{
-            text-align:center;
-        }
+@page {
+    size: 80mm auto;
+    margin: 3mm;
+}
 
-        table{
-            width:100%;
-            border-collapse:collapse;
-        }
+body{
+    width:72mm;
+    margin:0 auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size:11px;
+}
 
-        td{
-            padding:2px 0;
-        }
+.center{
+    text-align:center;
+}
 
-        .right{
-            text-align:right;
-        }
+table{
+    width:100%;
+    border-collapse:collapse;
+}
 
-        @media print {
+th{
+    border:1px solid #000;
+    padding:2px;
+    font-size:10px;
+}
 
-            @page{
-                margin:0;
-            }
+td{
+    padding:2px;
+    font-size:10px;
+}
 
-            body{
-                margin:5px;
-            }
+.right{
+    text-align:right;
+}
 
-        }
+.line-top{
+    border-top:1px solid #000;
+}
 
-    </style>
+.line-bottom{
+    border-bottom:1px solid #000;
+}
+
+</style>
+
+<script>
+window.onload = function() {
+    setTimeout(function(){
+        window.print();
+        setTimeout(function(){
+            window.close();
+        },1000);
+    },500);
+
+};
+</script>
+
 </head>
 
-<body onload="printReceipt()">
+<body>
 
-    <div class="center">
-        <h3>MY STORE</h3>
-        <p>Bacolod City</p>
-        <p>Invoice #: <?php echo $invno; ?></p>
-    </div>
+<div class="center">
+    <b>ORDER SLIP</b><br>
+    Date: <?= $sdate ?> [<?= $stime ?>]<br>
+    Inv #: <?= $invno ?>
+</div>
 
-    <hr>
+<br>
 
-    <table>
+<table>
 
-        <tr>
-            <td>Coke</td>
-            <td class="right">50.00</td>
-        </tr>
+<tr>
+    <th align="left">Products</th>
+    <th>Qty</th>
+    <th>Price</th>
+    <th>Amount</th>
+</tr>
 
-        <tr>
-            <td>Rice</td>
-            <td class="right">20.00</td>
-        </tr>
+<?php foreach($salesitems as $item): ?>
 
-    </table>
+<tr>
+    <td><?= htmlspecialchars($item['prodname']) ?></td>
+    <td class="right"><?= number_format($item['qty'],2) ?></td>
+    <td class="right"><?= number_format($item['uprice'],2) ?></td>
+    <td class="right"><?= number_format($item['tamount'],2) ?></td>
+</tr>
 
-    <hr>
+<?php endforeach; ?>
 
-    <table>
+<tr>
+    <td colspan="2" class="line-top"><?= $nRec ?></td>
+    <td class="right line-top">Total</td>
+    <td class="right line-top"><?= $amount ?></td>
+</tr>
 
-        <tr>
-            <td>Total</td>
-            <td class="right">70.00</td>
-        </tr>
+<tr>
+    <td colspan="2"></td>
+    <td class="right">Discount</td>
+    <td class="right"><?= $discount ?></td>
+</tr>
 
-        <tr>
-            <td>Cash</td>
-            <td class="right"><?php echo $cash_tendered; ?></td>
-        </tr>
+<tr>
+    <td colspan="2"></td>
+    <td class="right">Amount</td>
+    <td class="right"><?= $netamount ?></td>
+</tr>
 
-        <tr>
-            <td>Change</td>
-            <td class="right"><?php echo $change_amount; ?></td>
-        </tr>
+<tr>
+    <td colspan="2">Cashier: <?= htmlspecialchars($cashier_name) ?></td>
+    <td class="right line-top">Tendered</td>
+    <td class="right line-top"><?= htmlspecialchars($cash_tendered) ?></td>
+</tr>
 
-    </table>
+<tr>
+    <td colspan="2"></td>
+    <td class="right line-bottom">Change</td>
+    <td class="right line-bottom"><?= htmlspecialchars($change_amount) ?></td>
+</tr>
 
-    <br>
-
-    <div class="center">
-        Thank you!
-    </div>
-
-    <script>
-
-        function printReceipt(){
-
-            window.focus();
-
-            window.print();
-
-            setTimeout(function(){
-                window.close();
-            },1000);
-
-        }
-
-    </script>
+</table>
 
 </body>
 </html>

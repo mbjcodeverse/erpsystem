@@ -218,6 +218,65 @@ class ModelSale{
 		$stmt -> close();
 		$stmt = null;	
 	}
+
+	static public function mdlPrintCashierReset($resetcode, $resetdetail, $resetype){
+		$pdo = (new Connection())->connect();
+		try {
+			if ($resetdetail === 'By Product Category') {
+				$sql = "SELECT 
+						c.catdescription,
+						SUM(si.tamount) AS tamount
+					FROM category c
+					INNER JOIN products p 
+						ON c.categorycode = p.categorycode
+					INNER JOIN salesitems si 
+						ON p.prodid = si.prodid
+					INNER JOIN sales s 
+						ON si.invno = s.invno
+					WHERE 
+						s.resetcode = :resetcode
+						AND s.status <> 'Void'
+						AND s.salemode = :resetype
+					GROUP BY c.catdescription
+					ORDER BY c.catdescription";
+			} else {
+				$sql = "";
+			}
+
+			$stmt = $pdo->prepare($sql);
+			$stmt->bindParam(':resetcode', $resetcode, PDO::PARAM_STR);
+			$stmt->bindParam(':resetype', $resetype, PDO::PARAM_STR);
+			$stmt->execute();
+			return $stmt->fetchAll(PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			return [
+				'error' => true,
+				'message' => $e->getMessage()
+			];
+		} finally {
+			$stmt = null;
+			$pdo = null;
+		}
+	}	
+
+	static public function mdlResetPreview($branchcode, $postedby, $reset_detail, $sale_mode){
+		if ($reset_detail == 'By Product Category'){			// By Product Category
+			$stmt = (new Connection)->connect()->prepare("SELECT c.catdescription,SUM(si.tamount) AS tamount 
+							FROM category AS c INNER JOIN products AS p ON (c.categorycode = p.categorycode)
+												INNER JOIN salesitems AS si ON (p.prodid = si.prodid)
+												INNER JOIN sales AS s ON (si.invno = s.invno)
+												WHERE (s.branchcode = '$branchcode') AND
+													  (s.postedby = '$postedby') AND
+													  (s.resetted = 'F') AND
+													  (s.status != 'Void') AND 
+													  (s.salemode = '$sale_mode') 
+												GROUP BY c.catdescription ORDER BY c.catdescription");
+			$stmt -> execute();
+			return $stmt -> fetchAll();
+			$stmt -> close();
+			$stmt = null;									
+		}
+	}
 }
 
 

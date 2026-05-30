@@ -1,5 +1,5 @@
 <!-- Vertical form options -->
-<div class="container-fluid">
+<div class="container-fluid" style="margin-top:4px;">
   <form class="cashier-form" method="POST" autocomplete="nope">
     <div class="row">
       <div class="col-md-6" style="padding-left: 5px;margin-top: 5px;padding-right: 5px;">
@@ -32,6 +32,9 @@
 
               <!-- Grant Incentive -->
               <input type="hidden" name="grant_incentive" id="grant_incentive" value="">
+
+              <!-- Reset Detail -->
+              <input type="hidden" name="reset_detail" id="reset_detail" value="">
 
               <!-- Transaction type (New / Update) -->
               <input type="hidden" name="trans_type" id="trans_type" value="New" required> 
@@ -82,8 +85,8 @@
                   </td>
                   <td class="overall_total" style="width:14%;font-size: 1.3em;text-align: right;font-weight: 400;padding-top: 3px;padding-bottom: 3px;padding-right:7px;">AMNT DUE</td>
 
-                  <td style="width:16%;font-size: 1.3em;padding: 3px;;">
-                      <input type="text" class="form-control" style="text-align: right;" id="num-amount" name="num-amount" autocomplete="nope" value="0.00" required readonly="true">
+                  <td style="width:30%;font-size: 1.3em;padding: 3px;;">
+                      <input type="text" class="form-control" style="font-size: 1.2em;text-align: right;" id="num-amount" name="num-amount" autocomplete="nope" value="0.00" required readonly="true">
                   </td>
                 </tr>
 
@@ -122,7 +125,7 @@
                   <td class="net_total" style="width:14%;font-size: 1.3em;text-align: right;font-weight: 400;padding-top: 3px;padding-bottom: 3px;padding-right: 7px;">NET DUE</td> 
 
                   <td style="width:16%;font-size: 1.3em;padding: 3px;">
-                      <input type="text" style="text-align: right;" class="form-control" id="num-netamount" name="num-netamount" autocomplete="nope" value="0.00" required readonly="true">
+                      <input type="text" style="font-size: 1.2em;text-align: right;" class="form-control" id="num-netamount" name="num-netamount" autocomplete="nope" value="0.00" required readonly="true">
                   </td>
                 </tr>                
 

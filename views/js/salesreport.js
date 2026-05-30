@@ -101,7 +101,7 @@ $(function() {
                             for(let i = 0; i < answer.length; i++) {
                                 let sales = answer[i];
                                 let catdescription = sales.catdescription;
-                                let total_qty = numberWithCommas(sales.total_qty);
+                                let total_qty = numberWithCommas3dec(sales.total_qty);
                                 let total_amount = numberWithCommas(sales.total_amount);
                                 let total_cost = numberWithCommas(sales.total_cost);
                                 let total_profit = numberWithCommas(sales.total_profit);
@@ -157,7 +157,7 @@ $(function() {
                                     }                 
                                 }
 
-                                let total_qty = numberWithCommas(sales.total_qty);
+                                let total_qty = numberWithCommas3dec(sales.total_qty);
                                 let total_amount = numberWithCommas(sales.total_amount);
                                 let total_cost = numberWithCommas(sales.total_cost);
                                 let total_profit = numberWithCommas(sales.total_profit);
@@ -210,7 +210,7 @@ $(function() {
                                 let invno = sales.invno;
                                 let status = sales.status;
                                 let prodname = sales.prodname;
-                                let qty = numberWithCommas(sales.qty);
+                                let qty = numberWithCommas3dec(sales.qty);
                                 let price = numberWithCommas(sales.uprice);
                                 let tamount = numberWithCommas(sales.tamount);
                                 let cost = numberWithCommas(sales.cost);

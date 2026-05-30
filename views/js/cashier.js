@@ -25,9 +25,11 @@ if (!$.fn.DataTable.isDataTable('.transactionProductsTable')) {
 
 $(function() {
     _gblBindNumericClasses('numeric');
+    _gblBindNumericClasses3dec('numeric3');
     // Move around ordered items table using arrow keys
     navigateOrderGrid();
     getBranchPrefixCode();
+    getBranchInfo();
     displayCurrentDate();
     loadBranchProducts();
 
@@ -116,6 +118,11 @@ $(function() {
         bill_order();
     });
 
+    $(document).on('keydown', function (e) {
+        if (e.key === "Escape" && $('#modal-bill-order').hasClass('show')) {
+            $('#modal-bill-order').modal('hide');
+        }
+    });
 
     // ---------------- OVERRIDE PRICE --------------------------------------------------
     shortcut.add("F8",function() {
@@ -419,6 +426,7 @@ $(function() {
 
         productAmount.val(numberWithCommas(totalAmount.toFixed(2)));
         _gblBindNumericClasses('numeric');
+        _gblBindNumericClasses3dec('numeric3');
         addingTotalPrices();
         listProducts();
     });
@@ -484,8 +492,121 @@ $(function() {
 
     // ------------------ Cashier Reset --------------------------------------------------------
 
+    $('#modal-reset-cashier').on('shown.bs.modal', function (e) {
+        $('#reset-override').val('');
+        $('#reset-override').focus();
+    }); 
+
+    $('#modal-reset-cashier').on('shown.bs.modal', function (e) {
+        $(".reset_content").empty();
+        $('#reset-override').val('');
+
+        let branchcode = $("#branch_code").val();
+        let postedby = $("#tns-postedby").val();
+        let reset_detail = $("#reset_detail").val();
+        let sale_mode = 'Counter';
+
+        let checkdata = new FormData();
+        checkdata.append("branchcode", branchcode);
+        checkdata.append("postedby", postedby);
+        checkdata.append("reset_detail", reset_detail);
+        checkdata.append("sale_mode", sale_mode);
+        $.ajax({
+            url:"ajax/sale_reset_preview.ajax.php",
+            method: "POST",
+            data: checkdata,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType:"json",
+            success:function(answer){
+                $(".reset_content").empty();
+                var html = [];
+                if (answer.length > 0){
+                    if (reset_detail == 'By Product Category'){
+                        html.push('<table class="table mx-auto w-auto" style="margin-top:20px;font-size:1.2em;border: 1px solid bisque;">');
+                            html.push('<thead>');
+                            html.push('<tr>');
+                                html.push('<th style="padding-top:6px;padding-bottom:6px;border: 1px solid bisque;">CATEGORY</th>');
+                                html.push('<th style="padding-top:6px;padding-bottom:6px;border: 1px solid bisque;">AMOUNT</th>');
+                            html.push('</tr>');
+                            html.push('</thead>');
+                            
+                            var total_amount = 0.00;
+                            for(var i = 0; i < answer.length; i++) {
+                                var reset = answer[i];
+                                var catdescription = reset.catdescription;
+                                var tamount = numberWithCommas(reset.tamount);
+                                total_amount = total_amount + Number(reset.tamount);
+
+                                html.push('<tr>');
+                                    html.push('<td style="padding-top:4px;padding-bottom:4px;">'+catdescription+'</td>');
+                                    html.push('<td style="padding-top:4px;padding-bottom:4px;text-align:right;">'+tamount+'</td>');
+                                html.push('</tr>');
+                            } 
+
+                            html.push('<tr>');
+                            html.push('<th style="padding-top:6px;padding-bottom:6px;border: 1px solid bisque;font-size:1.2em;">TOTAL SALES</th>');
+                            html.push('<th style="padding-top:6px;padding-bottom:6px;border: 1px solid bisque;font-size:1.2em;color:greenyellow;">'+numberWithCommas(total_amount)+'</th>');
+                            html.push('</tr>');
+                        html.push('</table>');
+                    }else{
+                        html.push('<table class="table mx-auto w-auto" style="margin-top:20px;font-size:1.2em;border: 1px solid bisque;">');
+                            html.push('<thead>');
+                            html.push('<tr>');
+                                html.push('<th style="padding-top:6px;padding-bottom:6px;border: 1px solid bisque;">PRODUCT</th>');
+                                html.push('<th style="padding-top:6px;padding-bottom:6px;border: 1px solid bisque;">QTY</th>');
+                                html.push('<th style="padding-top:6px;padding-bottom:6px;border: 1px solid bisque;">AMOUNT</th>');
+                            html.push('</tr>');
+                            html.push('</thead>');
+                            
+                            var total_amount = 0.00;
+                            for(var i = 0; i < answer.length; i++) {
+                                var reset = answer[i];
+                                var prod_name = (reset.brandname != '') ? reset.brandname + ' ' + reset.prodname : reset.prodname;
+                                var qty = numberWithCommas(reset.qty);
+                                var tamount = numberWithCommas(reset.tamount);
+                                total_amount = total_amount + Number(reset.tamount);
+
+                                html.push('<tr>');
+                                    html.push('<td style="padding-top:4px;padding-bottom:4px;">'+prod_name+'</td>');
+                                    html.push('<td style="padding-top:4px;padding-bottom:4px;text-align:right;">'+qty+'</td>');
+                                    html.push('<td style="padding-top:4px;padding-bottom:4px;text-align:right;">'+tamount+'</td>');
+                                html.push('</tr>');
+                            } 
+
+                            html.push('<tr>');
+                            html.push('<th colspan="2" style="padding-top:6px;padding-bottom:6px;border: 1px solid bisque;font-size:1.2em;">TOTAL SALES</th>');
+                            html.push('<th style="padding-top:6px;padding-bottom:6px;border: 1px solid bisque;font-size:1.2em;color:greenyellow;">'+numberWithCommas(total_amount)+'</th>');
+                            html.push('</tr>');
+                        html.push('</table>');                
+                    }    
+                
+                    $('.reset_content').html(html.join('')); 
+                    $("#reset-override").prop('disabled', false);
+                    $("#btn-admin-direct-reset").prop('disabled', false);
+                    // $("#btn-reset-request").prop('disabled', false);
+                    $('#reset-override').focus();
+                }else{
+                    html.push('<table class="table mx-auto w-auto" style="margin-top:20px;font-size:1.2em;">');
+                        html.push('<thead>');
+                            html.push('<tr>');
+                                html.push('<th style="padding-top:6px;padding-bottom:6px;border: 1px solid #fa6f5c;color: #fa6f5c;">NO SALES FOUND TO RESET!</th>');
+                            html.push('</tr>');
+                        html.push('</thead>');
+                    html.push('</table>');
+                    $('.reset_content').html(html.join(''));
+                                
+                    $("#reset-override").prop('disabled', true);
+                    $("#btn-admin-direct-reset").prop('disabled', true);
+                    // $("#btn-reset-request").prop('disabled', true);
+                }
+            }
+        });
+    });  
+   
     $("#btn-admin-direct-reset").click(function(){
-       reset_cashier();
+        reset_cashier();
     });
 
     function reset_cashier(){
@@ -516,7 +637,7 @@ $(function() {
                 processData: false,
                 dataType:"json",
                 success:function(answer){
-                    if(answer["override"] === undefined){
+                    if(answer["overridekey"] === undefined){
                         swal.fire({
                             title: 'Cannot Reset, unidentified authorization code!',
                             type: 'error',
@@ -604,11 +725,14 @@ $(function() {
                                                 let cashierid = $("#tns-postedby").val();
                                                 let resetdetail = $("#reset_detail").val();
 
-                                                if (resetdetail == 'By Product Category'){
-                                                    window.open("reports/resetprint.php?branchcode="+branchcode+"&cashierid="+cashierid+"&branch_name="+branch_name+"&resetcode="+resetcode+"&resetdetail="+resetdetail+"&resetype="+resetype, "_blank"); 
-                                                }else{
-                                                    window.open("reports/resetprintbyproduct.php?branchcode="+branchcode+"&cashierid="+cashierid+"&branch_name="+branch_name+"&resetcode="+resetcode+"&resetdetail="+resetdetail+"&resetype="+resetype, "_blank");
-                                                }
+                                                window.open("reports/resetprint.php?branchcode="+branchcode+"&cashierid="+cashierid+"&branch_name="+branch_name+"&resetcode="+resetcode+"&resetdetail="+resetdetail+"&resetype="+resetype, "_blank"); 
+
+                                                // if (resetdetail == 'By Product Category'){
+                                                //     alert(reset);
+                                                //     window.open("reports/resetprint.php?branchcode="+branchcode+"&cashierid="+cashierid+"&branch_name="+branch_name+"&resetcode="+resetcode+"&resetdetail="+resetdetail+"&resetype="+resetype, "_blank"); 
+                                                // }else{
+                                                //     window.open("reports/resetprintbyproduct.php?branchcode="+branchcode+"&cashierid="+cashierid+"&branch_name="+branch_name+"&resetcode="+resetcode+"&resetdetail="+resetdetail+"&resetype="+resetype, "_blank");
+                                                // }
 
                                                 $('#modal-reset-cashier').modal('hide');
                                                 initialize();
@@ -691,6 +815,25 @@ $(function() {
                 $('#prefix').val(answer["prefix"]);
             }
         });
+    }
+
+    function getBranchInfo(){
+        let branchcode =  $("#branch_code").val();
+        let branch_code = new FormData();
+        branch_code.append("branchcode", branchcode);
+        $.ajax({
+            url:"ajax/get_branch_name.ajax.php",   
+            method: "POST",                
+            data: branch_code,                    
+            cache: false,                  
+            contentType: false,            
+            processData: false,            
+            dataType:"json",               
+            success:function(answer){
+                $("#branch_name").val(answer["bname"]);
+                $("#reset_detail").val(answer["resetdetail"]);
+            }
+        });      
     }
 
     function loadBranchProducts(){
@@ -898,7 +1041,7 @@ $(function() {
                 var txt_origprice = $(orig_price[i]).val();
 
                 // Check if Qty or Price = 0.00
-                if ((txt_qty == "0.00")||!(txt_qty)||(txt_uprice == "0.00")){  
+                if ((txt_qty == "0.000")||!(txt_qty)||(txt_uprice == "0.00")){  
                     var hasZeroQty = true;
                 }
 
@@ -913,7 +1056,7 @@ $(function() {
                     vat_excempt = vat_excempt + tamount;
                 }
 
-                productList.push({"qty" : qty.toFixed(2),
+                productList.push({"qty" : qty.toFixed(3),
                                   "ucost" : ucost.toFixed(2),
                                   "uprice" : uprice.toFixed(2),
                                   "origprice" : origprice.toFixed(2),
@@ -969,16 +1112,16 @@ $(function() {
                 '<td width="50%" style="padding:2px;">'+   
                     '<div class="input-group">'+
                         '<span style="padding:2px;" class="input-group-prepend"><button type="button" style="color:coral;" class="btn btn-sm btn-light removeProduct" prodid="'+prodid+'"><i class="icon-undo"></i></button></span>'+         
-                        '<input type="text" style="padding:2px;" class="form-control prodname" prodid="'+prodid+'" name="addProduct" value="'+prodname+'" readonly required>'+
+                        '<input type="text" style="font-size:1.3em;padding:2px;" class="form-control prodname" prodid="'+prodid+'" name="addProduct" value="'+prodname+'" readonly required>'+
                     '</div>'+
                 '</td>'+   
 
                 '<td class="qtyEntry" width="15%" style="padding:2px;">'+
-                    '<input type="text" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control qty numeric" prodid="'+prodid+'" name="qty" value="1.00" required>'+
+                    '<input type="text" style="font-size:1.3em;padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control qty numeric3" prodid="'+prodid+'" name="qty" value="1.000" required>'+
                 '</td>' +
 
                 '<td class="priceEntry" width="15%" style="padding:2px;">'+
-                    '<input type="text" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control uprice numeric" prodid="'+prodid+'" name="uprice" value="'+uprice+'" disabled required>'+
+                    '<input type="text" style="font-size:1.3em;padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control uprice numeric" prodid="'+prodid+'" name="uprice" value="'+uprice+'" disabled required>'+
                     '<input type="hidden" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control ucost" prodid="'+prodid+'" name="ucost" value="'+ucost+'" required disabled>'+
                     '<input type="hidden" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control disprice" prodid="'+prodid+'" name="disprice" value="'+disprice+'" required disabled>'+
                     '<input type="hidden" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control minqty" prodid="'+prodid+'" name="minqty" value="'+minqty+'" required disabled>'+
@@ -988,7 +1131,7 @@ $(function() {
                 '</td>' +   
 
                 '<td class="totalAmount" width="15%" style="padding:2px;">'+
-                    '<input type="text" style="padding:2px;padding-right:17px;text-align:right;" class="form-control tamount" productPrice="'+uprice+'" name="tamount" value="0.00" readonly required>'+
+                    '<input type="text" style="font-size:1.3em;padding:2px;padding-right:17px;text-align:right;" class="form-control tamount" productPrice="'+uprice+'" name="tamount" value="0.00" readonly required>'+
                 '</td>' +                                
         '</tr>');
     
@@ -1083,16 +1226,23 @@ $(function() {
             let invno = $("#invno").val();
             let cash_tendered = $("#cash-tendered").val();
             let change_amount = $("#change-amount").val();
+
+            window.open(
+                "reports/order_slip.php?invno=" + invno +
+                "&cash_tendered=" + encodeURIComponent(cash_tendered) +
+                "&change_amount=" + encodeURIComponent(change_amount),
+                "_blank"
+            );
             
             // window.open("reports/orderslip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
             
-            var printWindow = window.open("reports/orderslip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
-            printWindow.onload = function() {
-                printWindow.print();
-                setTimeout(function() {
-                    printWindow.close();
-                }, 4000);
-            };
+            // var printWindow = window.open("reports/orderslip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
+            // printWindow.onload = function() {
+            //     printWindow.print();
+            //     setTimeout(function() {
+            //         printWindow.close();
+            //     }, 4000);
+            // };
 
             // window.open(
             //     "reports/order_slip.php?invno=" + invno +
