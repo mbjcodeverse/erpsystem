@@ -104,9 +104,16 @@ $(function() {
        }
     }); 
     
-    $("#cash-tendered").keyup(function(event) {
-        if (event.keyCode === 13) {
-            if ($('#btn-commit-sale').prop('disabled')) {
+    // Pressing ENTER on Cash Tendered
+    $(document).on('keydown', '#cash-tendered', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // always stop default ENTER behavior
+
+            let cash = parseFloat($(this).val()) || 0;
+            let isDisabled = $('#btn-commit-sale').prop('disabled');
+
+            // Block ENTER if cash is zero OR button is disabled
+            if (cash <= 0 || isDisabled) {
                 swal.fire({
                     title: 'Cannot bill out, insufficient cash!',
                     type: 'warning',
@@ -114,11 +121,14 @@ $(function() {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                $("#cash-tendered").val('0.00');
+
+                $(this).val('0.00');
                 $('#change-amount').val('0.00');
-            }else{
-                $("#btn-commit-sale").click();
+                return;
             }
+
+            // Otherwise commit sale
+            $('#btn-commit-sale').trigger('click');
         }
     });
 
@@ -156,7 +166,7 @@ $(function() {
     });
     // ----------------------------------------------------------------------------------
 
-    // Increase width of datatable filtered box
+    // Filter box FOCUS: show border effect
     $(document).on('focus', 'div.dataTables_filter input', function () {
         this.style.border = '3px solid #7CFF7C';
         this.style.outline = 'none';
@@ -166,6 +176,7 @@ $(function() {
         this.style.transition = 'all 0.2s ease-in-out';
     });
 
+    // Filter box BLUR: hide border effect
     $(document).on('blur', 'div.dataTables_filter input', function () {
         this.style.border = '1px solid #ccc';
         this.style.outline = 'none';
@@ -173,6 +184,7 @@ $(function() {
         this.style.opacity = '0.5';
     });
 
+    // Increase width of datatable filtered box
     $('.dataTables_filter input[type="search"]').css({'width':'350px','display':'inline-block'});
 
     reset_search();
@@ -267,6 +279,12 @@ $(function() {
 
     // Pressing ENTER on highlighted product...
     pl.on('key', function (e, datatable, key, cell, originalEvent) {
+        // If ENTER was pressed inside qty input, ignore DataTables key handler
+        // Without this, it will fire the message 'Product has already been enlisted!'
+        if (key === 13 && $(originalEvent.target).hasClass('qty')) {
+            return;
+        }
+
         if (key == 13){        // Using 13 for ENTER key, makes sweet alert dissapear instantly (conflict with key event)
             let idx = pl.row(cell.index().row).index();
             let prodname = pl.cell(idx, 0).data();
@@ -455,6 +473,13 @@ $(function() {
         addingTotalPrices();
         listProducts();
     });
+    
+    // After adding the product, prevent ENTER in qty inorder not to show NaN
+    $(document).on('keydown', '.qty', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+        }
+    });
 
     // RIGHT CLICK QTY = VIEW WHOLESALE INFO
     $(".cashier-form").on("contextmenu", "input.qty", function(e){
@@ -486,7 +511,6 @@ $(function() {
             buttonsStyling: false
         });
     });
-
 
     // Removal of selected item ----------------------------------------------------------------
     var idRemoveProduct = [];
