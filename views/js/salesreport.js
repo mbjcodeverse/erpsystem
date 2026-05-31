@@ -86,7 +86,7 @@ $(function() {
                 $(".sales_content").empty();
                 var html = [];
                 if (reptype == 1){
-                    // alert('1');
+                    alert('1');
                     html.push('<div class="table-responsive" style="overflow-y: auto; max-height: 470px;">');
                         html.push('<table class="table mx-auto w-auto">');
                             html.push('<thead>');
