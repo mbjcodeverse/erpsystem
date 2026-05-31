@@ -106,7 +106,7 @@ $(function() {
                                 let total_amount = numberWithCommas(sales.total_amount);
                                 let total_cost = numberWithCommas(sales.total_cost);
                                 let total_profit = numberWithCommas(sales.total_profit);
-                                // alert(total_amount);
+                                alert(total_amount);
                                 html.push('<tr>');
                                     if (i == answer.length - 1){
                                         html.push('<td style="font-size:1.1em;font-weight:bold;border-top: 2px solid white;">OVERALL AMOUNT</td>');
