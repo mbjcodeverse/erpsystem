@@ -8,7 +8,7 @@ session_start();
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>G168 POS</title>
+  <title>G☆168 POS</title>
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.css" />
   <script src="https://cdn.jsdelivr.net/npm/zoomist@2/zoomist.umd.js"></script>   
