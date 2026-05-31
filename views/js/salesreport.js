@@ -86,7 +86,6 @@ $(function() {
                 $(".sales_content").empty();
                 var html = [];
                 if (reptype == 1){
-                    alert(answer.length);
                     html.push('<div class="table-responsive" style="overflow-y: auto; max-height: 470px;">');
                         html.push('<table class="table mx-auto w-auto">');
                             html.push('<thead>');
@@ -106,7 +105,6 @@ $(function() {
                                 let total_amount = numberWithCommas(sales.total_amount);
                                 let total_cost = numberWithCommas(sales.total_cost);
                                 let total_profit = numberWithCommas(sales.total_profit);
-                                alert(total_amount);
                                 html.push('<tr>');
                                     if (i == answer.length - 1){
                                         html.push('<td style="font-size:1.1em;font-weight:bold;border-top: 2px solid white;">OVERALL AMOUNT</td>');
