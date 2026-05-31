@@ -83,6 +83,7 @@ $(function() {
             processData: false,
             dataType: "json",
             success: function(answer) {
+                alert('11');
                 $(".sales_content").empty();
                 var html = [];
                 if (reptype == 1){
