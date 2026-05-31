@@ -11,7 +11,7 @@ if (!$.fn.DataTable.isDataTable('.transactionProductsTable')) {
                   loadingRecords: 'Loading products...',
                   processing: 'Loading products...',
                   emptyTable: 'Loading products...', // replaces "No data available in table"
-                  search: '<span style="font-size:16px;font-weight:bold;color:#86f7a4;">[ F2 ] SEARCH:</span> _INPUT_',
+                  search: '<span style="font-size:20px;font-weight:bold;color:#86f7a4;padding-top:3px;">[ F2 ] SEARCH:</span> _INPUT_',
                   searchPlaceholder: 'Type to filter...',
                   lengthMenu: '<span>Show:</span> _MENU_',
                   paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' }
@@ -85,8 +85,16 @@ $(function() {
 
        if (cash_tendered < sale_netamount){
           $("#btn-commit-sale").prop('disabled', true);
+          $("#btn-commit-sale").css({
+                "border": "",
+                "box-shadow": ""
+            });
        }else{
           $("#btn-commit-sale").prop('disabled', false);
+          $("#btn-commit-sale").css({
+                "border": "3px solid lightgreen",
+                "box-shadow": "0 0 6px lightgreen"
+            });
        }
 
        if (result < 0){
@@ -148,9 +156,26 @@ $(function() {
     });
     // ----------------------------------------------------------------------------------
 
-
     // Increase width of datatable filtered box
+    $(document).on('focus', 'div.dataTables_filter input', function () {
+        this.style.border = '3px solid #7CFF7C';
+        this.style.outline = 'none';
+        this.style.opacity = '1.0';
+        this.style.fontSize = '20px';
+        this.style.boxShadow = '0 0 6px rgba(124, 255, 124, 0.6), 0 0 12px rgba(124, 255, 124, 0.3)';
+        this.style.transition = 'all 0.2s ease-in-out';
+    });
+
+    $(document).on('blur', 'div.dataTables_filter input', function () {
+        this.style.border = '1px solid #ccc';
+        this.style.outline = 'none';
+        this.style.boxShadow = 'none';
+        this.style.opacity = '0.5';
+    });
+
     $('.dataTables_filter input[type="search"]').css({'width':'350px','display':'inline-block'});
+
+    reset_search();
 
     var first_idx = 0;
     $('div.dataTables_filter input').on('keyup keypress',function (event) {
@@ -490,7 +515,7 @@ $(function() {
         let rows = a.rows.length;
     });  
 
-    // ------------------ Cashier Reset --------------------------------------------------------
+    // ------------------ CASHIER RESET --------------------------------------------------------
 
     $('#modal-reset-cashier').on('shown.bs.modal', function (e) {
         $('#reset-override').val('');
@@ -609,6 +634,12 @@ $(function() {
         reset_cashier();
     });
 
+    $('#reset-override').keypress(function(e) {
+        if (e.which == 13) {
+            $('#btn-admin-direct-reset').click();
+        }
+    });
+
     function reset_cashier(){
         $('#reset-override').focus();
         if ($("#reset-override").val() == ''){  
@@ -661,7 +692,15 @@ $(function() {
                             confirmButtonClass: 'btn btn-outline-success',
                             cancelButtonClass: 'btn btn-outline-danger',
                             allowOutsideClick: false,
-                            buttonsStyling: false
+                            buttonsStyling: false,
+                            focusConfirm: true,
+                            allowEnterKey: true
+                            // onOpen: function() {
+                            //     Swal.getConfirmButton().focus();
+                            //     // setTimeout(function () {
+                            //     //     Swal.getConfirmButton().focus();
+                            //     // }, 50);
+                            // }
                         }).then(function(result) {
                             if(result.value) {
                                 let branchcode = $("#branch_code").val();
