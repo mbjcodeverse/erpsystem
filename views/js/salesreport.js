@@ -86,6 +86,7 @@ $(function() {
                 $(".sales_content").empty();
                 var html = [];
                 if (reptype == 1){
+                    alert(answer.length);
                     html.push('<div class="table-responsive" style="overflow-y: auto; max-height: 470px;">');
                         html.push('<table class="table mx-auto w-auto">');
                             html.push('<thead>');
@@ -98,30 +99,30 @@ $(function() {
                                 html.push('</tr>');
                             html.push('</thead>');
 
-                            // for(let i = 0; i < answer.length; i++) {
-                            //     let sales = answer[i];
-                            //     let catdescription = sales.catdescription;
-                            //     let total_qty = numberWithCommas3dec(sales.total_qty);
-                            //     let total_amount = numberWithCommas(sales.total_amount);
-                            //     let total_cost = numberWithCommas(sales.total_cost);
-                            //     let total_profit = numberWithCommas(sales.total_profit);
-                            //     alert(total_amount);
-                            //     html.push('<tr>');
-                            //         if (i == answer.length - 1){
-                            //             html.push('<td style="font-size:1.1em;font-weight:bold;border-top: 2px solid white;">OVERALL AMOUNT</td>');
-                            //             html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+total_qty+'</td>');
-                            //             html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+total_amount+'</td>');
-                            //             html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;border-left: 2px solid white;color:#fc8677;">'+total_cost+'</td>');
-                            //             html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;color:#0FFF50;">'+total_profit+'</td>');
-                            //         }else{
-                            //             html.push('<td>'+catdescription+'</td>');
-                            //             html.push('<td style="text-align:right;">'+total_qty+'</td>');
-                            //             html.push('<td style="text-align:right;">'+total_amount+'</td>');
-                            //             html.push('<td style="text-align:right;border-left: 2px solid white;color:#fc8677;">'+total_cost+'</td>');
-                            //             html.push('<td style="text-align:right;color:#0FFF50;">'+total_profit+'</td>');
-                            //         }
-                            //     html.push('</tr>');
-                            // }   
+                            for(let i = 0; i < answer.length; i++) {
+                                let sales = answer[i];
+                                let catdescription = sales.catdescription;
+                                let total_qty = numberWithCommas3dec(sales.total_qty);
+                                let total_amount = numberWithCommas(sales.total_amount);
+                                let total_cost = numberWithCommas(sales.total_cost);
+                                let total_profit = numberWithCommas(sales.total_profit);
+                                alert(total_amount);
+                                html.push('<tr>');
+                                    if (i == answer.length - 1){
+                                        html.push('<td style="font-size:1.1em;font-weight:bold;border-top: 2px solid white;">OVERALL AMOUNT</td>');
+                                        html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+total_qty+'</td>');
+                                        html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+total_amount+'</td>');
+                                        html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;border-left: 2px solid white;color:#fc8677;">'+total_cost+'</td>');
+                                        html.push('<td style="font-size:1.1em;font-weight:bold;text-align:right;border-top: 2px solid white;color:#0FFF50;">'+total_profit+'</td>');
+                                    }else{
+                                        html.push('<td>'+catdescription+'</td>');
+                                        html.push('<td style="text-align:right;">'+total_qty+'</td>');
+                                        html.push('<td style="text-align:right;">'+total_amount+'</td>');
+                                        html.push('<td style="text-align:right;border-left: 2px solid white;color:#fc8677;">'+total_cost+'</td>');
+                                        html.push('<td style="text-align:right;color:#0FFF50;">'+total_profit+'</td>');
+                                    }
+                                html.push('</tr>');
+                            }   
                         html.push('</table>');
                   html.push('</div>');
                 }else if (reptype == 2){
