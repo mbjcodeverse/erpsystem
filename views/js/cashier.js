@@ -201,11 +201,19 @@ $(function() {
         }
     });
 
-    // Enlisting Products ---------------------------------------------------------------
-    // Scan barcode in filter box...
+    // ENLISTING PRODUCTS ---------------------------------------------------------------
+    // Scan barcode in filter box...or...Pressing ENTER on filter search box
     $('div.dataTables_filter input').on('keydown', function(e) {
         if (e.keyCode === 13) {             // Enter from barcode scanner
+            e.preventDefault();             // stop DataTables / form ENTER behavior
+
             let value = $(this).val().trim();
+
+            // PREVENT ENTER if empty
+            if (value === '') {
+                return;
+            }
+
             let foundRow = null;
             pl.rows({ search: 'applied' }).every(function() {
                 let data = this.data();
@@ -250,7 +258,7 @@ $(function() {
                 $(this).val('');
             }else{
                 swal.fire({
-                    title: 'Barcode not found!',
+                    title: 'Product not found!',
                     type: 'info',
                     allowOutsideClick: false,
                     showConfirmButton: false,
@@ -315,6 +323,8 @@ $(function() {
     
     // Highlighting product - Arrow keys...
     pl.on('key-focus', function (e, datatable, cell) {
+        $('.transactionProductsTable tbody tr')
+        .removeClass('row_selected');
         $(pl.row(cell.index().row).node()).addClass('row_selected');		// see mycss.css
     });
 
@@ -664,6 +674,8 @@ $(function() {
         }
     });
 
+    // -----------------------------------------------------------------------------------------    
+
     function reset_cashier(){
         $('#reset-override').focus();
         if ($("#reset-override").val() == ''){  
@@ -810,8 +822,6 @@ $(function() {
             });
         }         
     } 
-
-    // -----------------------------------------------------------------------------------------
 
     function displayCurrentDate(){
         let today = new Date();
@@ -971,44 +981,6 @@ $(function() {
             }
         });
     }  
-
-    // function loadBranchProducts(){
-    //     let branchcode = $("#branch_code").val();
-    //     let product_list = new FormData();
-    //     product_list.append("branchcode", branchcode);
-    //     $.ajax({
-    //         url:"ajax/branch_product_list.ajax.php",
-    //         method: "POST",
-    //         data: product_list,
-    //         cache: false,
-    //         contentType: false,
-    //         processData: false,
-    //         dataType:"json",
-    //         success:function(answer){
-    //             for(var i = 0; i < answer.length; i++) {
-    //                 let prod = answer[i];
-    //                 let prodid = prod.prodid;
-    //                 let prodname = prod.prodname;
-    //                 let barcode = prod.barcode;
-
-    //                 let price_amount = prod.uprice;
-    //                 let uprice = numberWithCommas(price_amount);
-
-    //                 let ucost_amount = prod.ucost;
-    //                 let ucost = numberWithCommas(ucost_amount);
-
-    //                 let disprice = prod.disprice;
-    //                 let minqty = prod.minqty;
-
-    //                 let vatdesc = prod.vatdesc;
-
-    //                 var button = "<td><button type='button' class='btn btn-outline btn-sm bg-green-400 border-green-400 text-green-400 btn-icon rounded-round border-2 ml-2 addProduct recoverButton' prodid='"+prodid+"' prodname='"+prodname+"' uprice='"+uprice+"' ucost='"+ucost+"' disprice='"+disprice+"' minqty='"+minqty+"' vatdesc='"+vatdesc+"' barcode='"+barcode+"'><i class='icon-check'></i></button></td>";  
-    //                 pl.row.add([prodname, uprice, prodid, ucost, disprice, minqty, vatdesc, barcode, button]); 
-    //             }
-    //             pl.draw();
-    //         }
-    //     });  	
-    // }
 
     function new_order(){
         $('div.dataTables_filter input').focus();
@@ -1290,14 +1262,14 @@ $(function() {
             let cash_tendered = $("#cash-tendered").val();
             let change_amount = $("#change-amount").val();
 
-            window.open(
-                "reports/order_slip.php?invno=" + invno +
-                "&cash_tendered=" + encodeURIComponent(cash_tendered) +
-                "&change_amount=" + encodeURIComponent(change_amount),
-                "_blank"
-            );
+            // window.open(
+            //     "reports/order_slip.php?invno=" + invno +
+            //     "&cash_tendered=" + encodeURIComponent(cash_tendered) +
+            //     "&change_amount=" + encodeURIComponent(change_amount),
+            //     "_blank"
+            // );
             
-            // window.open("reports/orderslip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
+            window.open("reports/order_slip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
             
             // var printWindow = window.open("reports/orderslip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
             // printWindow.onload = function() {

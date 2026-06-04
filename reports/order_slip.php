@@ -27,7 +27,8 @@ $netamount = number_format($sale['netamount'],2);
 $postedby = $sale['postedby'];
 
 $cashier = (new ControllerEmployees)->ctrEmployeeInfo($postedby);
-$cashier_name = $cashier['fname'].' '.$cashier['lname'];
+// $cashier_name = $cashier['fname'].' '.$cashier['lname'];
+$cashier_name = $cashier['fname'];
 
 ?>
 <!DOCTYPE html>
@@ -102,7 +103,7 @@ window.onload = function() {
 <body>
 
 <div class="center">
-    <b>ORDER SLIP</b><br>
+    <b style="font-size:16px;">ORDER SLIP</b><br>
     Date: <?= $sdate ?> [<?= $stime ?>]<br>
     Inv #: <?= $invno ?>
 </div>
@@ -112,53 +113,67 @@ window.onload = function() {
 <table>
 
 <tr>
-    <th align="left">Products</th>
-    <th>Qty</th>
-    <th>Price</th>
-    <th>Amount</th>
+    <th style="font-size:14px;" align="left">Products</th>
+    <th style="font-size:14px;">Qty</th>
+    <th style="font-size:14px;">Price</th>
+    <th style="font-size:14px;">Amount</th>
 </tr>
 
 <?php foreach($salesitems as $item): ?>
 
 <tr>
-    <td><?= htmlspecialchars($item['prodname']) ?></td>
-    <td class="right"><?= number_format($item['qty'],2) ?></td>
-    <td class="right"><?= number_format($item['uprice'],2) ?></td>
-    <td class="right"><?= number_format($item['tamount'],2) ?></td>
+    <td style="font-size:14px;"><?= htmlspecialchars($item['prodname']) ?></td>
+    <td style="font-size:14px;" class="right"><?= number_format($item['qty'],3) ?></td>
+    <td style="font-size:14px;" class="right"><?= number_format($item['uprice'],2) ?></td>
+    <td style="font-size:14px;" class="right"><?= number_format($item['tamount'],2) ?></td>
 </tr>
 
 <?php endforeach; ?>
 
 <tr>
-    <td colspan="2" class="line-top"><?= $nRec ?></td>
-    <td class="right line-top">Total</td>
-    <td class="right line-top"><?= $amount ?></td>
+    <td style="font-size:14px;" colspan="2" class="line-top"><?= $nRec ?></td>
+    <td style="font-size:14px;" class="right line-top">Total</td>
+    <td style="font-size:14px;" class="right line-top"><?= $amount ?></td>
 </tr>
 
 <tr>
     <td colspan="2"></td>
-    <td class="right">Discount</td>
-    <td class="right"><?= $discount ?></td>
+    <td style="font-size:14px;" class="right">Discount</td>
+    <td style="font-size:14px;" class="right"><?= $discount ?></td>
 </tr>
 
 <tr>
     <td colspan="2"></td>
-    <td class="right">Amount</td>
-    <td class="right"><?= $netamount ?></td>
+    <td style="font-size:14px;" class="right">Amount</td>
+    <td style="font-size:14px;" class="right"><?= $netamount ?></td>
 </tr>
 
 <tr>
-    <td colspan="2">Cashier: <?= htmlspecialchars($cashier_name) ?></td>
-    <td class="right line-top">Tendered</td>
-    <td class="right line-top"><?= htmlspecialchars($cash_tendered) ?></td>
+    <td style="font-size:14px;" colspan="2">Cashier: <?= htmlspecialchars($cashier_name) ?></td>
+    <td style="font-size:14px;" class="right line-top">Tendered</td>
+    <td style="font-size:14px;" class="right line-top"><?= htmlspecialchars($cash_tendered) ?></td>
 </tr>
 
 <tr>
     <td colspan="2"></td>
-    <td class="right line-bottom">Change</td>
-    <td class="right line-bottom"><?= htmlspecialchars($change_amount) ?></td>
+    <td style="font-size:14px;" class="right">Change</td>
+    <td style="font-size:14px;" class="right"><?= htmlspecialchars($change_amount) ?></td>
 </tr>
 
+<tr><td></td></tr>
+<tr><td></td></tr>
+<tr><td></td></tr>
+
+<tr>
+    <td colspan="4" style="font-size:14px;" class="left">This is not a sales invoice. This document is not valid for claiming input tax.</td>
+</tr>
+
+<tr><td></td></tr>
+<tr><td></td></tr>
+
+<tr>
+    <td colspan="4" style="font-size:14px;" class="left">Please ask for sales invoice.</td>
+</tr>
 </table>
 
 </body>

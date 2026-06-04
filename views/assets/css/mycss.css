@@ -426,9 +426,13 @@ table.profile-grid-header thead{
 }
 
 /*Seller table row highlighting*/
-tr.row_selected{
+/* tr.row_selected{
   background-color:#313445 !important;
-  /*border: 2px solid yellow;*/
+} */
+
+tr.row_selected td {
+    background-color: #2e4182 !important;
+    box-shadow: inset 0 0 0 1px #7391f5;
 }
 
 /* Shadow and gradient effect on cards */
