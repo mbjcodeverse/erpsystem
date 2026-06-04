@@ -1262,14 +1262,14 @@ $(function() {
             let cash_tendered = $("#cash-tendered").val();
             let change_amount = $("#change-amount").val();
 
-            // window.open(
-            //     "reports/order_slip.php?invno=" + invno +
-            //     "&cash_tendered=" + encodeURIComponent(cash_tendered) +
-            //     "&change_amount=" + encodeURIComponent(change_amount),
-            //     "_blank"
-            // );
+            window.open(
+                "reports/order_slip.php?invno=" + invno +
+                "&cash_tendered=" + encodeURIComponent(cash_tendered) +
+                "&change_amount=" + encodeURIComponent(change_amount),
+                "_blank"
+            );
             
-            window.open("reports/order_slip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
+            // window.open("reports/order_slip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
             
             // var printWindow = window.open("reports/orderslip.php?invno="+invno+"&cash_tendered="+cash_tendered+"&change_amount="+change_amount, "_blank"); 
             // printWindow.onload = function() {
