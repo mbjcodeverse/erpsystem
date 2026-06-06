@@ -242,7 +242,7 @@ $(function() {
                     let qty = parseFloat($qty.val().replace(/,/g, "")) || 0;
                     qty += 1;
 
-                    $qty.val(qty.toFixed(2));
+                    $qty.val(qty.toFixed(3));
 
                     $qty.trigger("blur");
                     $qty.trigger("keyup");
@@ -332,140 +332,44 @@ $(function() {
         $(pl.row(cell.index().row).node()).removeClass('row_selected');	    // see mycss.css
     });
 
-    // -------------------------------------------------------------------------------------
-    
-    // Total Amount = Qty * Price
-    // $(".cashier-form").on("keydown keypress blur focus", "input.qty,input.uprice", function(){
-    //     let prodid = $(this).parent().parent().children(".qtyEntry").children().attr("prodid");
+    // ------------------------------------------------------------------------------------- 
 
-    //     let q = $(this).parent().parent().children(".qtyEntry").children().val();
-    //     let quantity = q.replaceAll(",","");
+    $(".cashier-form").on("keyup blur","input.qty,input.uprice",function() {
+        let $row = $(this).closest("tr");
 
-    //     let p = $(this).parent().parent().children(".priceEntry").children().val();
-    //     let price = p.replaceAll(",","");   
+        let quantity  = parseFloat($row.find(".qty").val().replaceAll(",", "")) || 0;
+        let price     = parseFloat($row.find(".uprice").val().replaceAll(",", "")) || 0;
+        let disprice  = parseFloat($row.find(".disprice").val().replaceAll(",", "")) || 0;
+        let origprice = parseFloat($row.find(".origprice").val().replaceAll(",", "")) || 0;
+        let minqty    = parseFloat($row.find(".minqty").val().replaceAll(",", "")) || 0;
 
-    //     // CHECK IF QUANTITY EXCEEDS 9999
-    //     if (quantity > 9999.00) {
-    //         swal.fire({
-    //             title: 'Quantity exceeded, reverted input to zero!',
-    //             type: 'info',
-    //             allowOutsideClick: false,
-    //             showConfirmButton: false,
-    //             timer: 3000
-    //         });
-    //         quantity = 0.00;
+        let overridden = $row.find(".overrideflag").val() === "1";
 
-    //         // SET INPUT VALUE TO 0.00
-    //         $(this).parent().parent()
-    //             .children(".qtyEntry")
-    //             .children()
-    //             .val("0.00");
-    //     }
-
-    //     let totalAmount = quantity * price;
-        
-    //     let productAmount = $(this).parent().parent().children(".totalAmount").children(".tamount");
-    //     productAmount.val(numberWithCommas(totalAmount.toFixed(2)));
-
-    //     _gblBindNumericClasses('numeric'); 
-
-    //     addingTotalPrices();
-    //     listProducts(); 
-    // }); 
-
-    $(".cashier-form").on("keydown keypress blur focus", "input.qty,input.uprice", function(){
-        let prodid = $(this)
-            .parent()
-            .parent()
-            .children(".qtyEntry")
-            .children()
-            .attr("prodid");
-
-        // Quantity
-        let q = $(this)
-            .parent()
-            .parent()
-            .children(".qtyEntry")
-            .children()
-            .val();
-
-        let quantity = parseFloat(q.replaceAll(",","")) || 0;
-
-        // Current Price
-        let p = $(this)
-            .closest("tr")
-            .find("input.uprice")
-            .val();
-
-        let price = parseFloat(p.replaceAll(",","")) || 0;
-
-        // Discount Price
-        let d = $(this)
-            .closest("tr")
-            .find("input.disprice")
-            .val();
-
-        let disprice = parseFloat(d.replaceAll(",","")) || 0;
-
-        // Original Price
-        let o = $(this)
-            .closest("tr")
-            .find("input.origprice")
-            .val();
-
-        let origprice = parseFloat(o.replaceAll(",","")) || 0;
-
-        // Minimum Qty
-        let m = $(this)
-            .closest("tr")
-            .find("input.minqty")
-            .val();
-
-        let minqty = parseFloat(m.replaceAll(",","")) || 0;
-
-        // CHECK IF QUANTITY EXCEEDS 9999
-        if (quantity > 9999.00) {
-            swal.fire({
-                title: 'Quantity exceeded, reverted input to zero!',
-                type: 'info',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                timer: 3000
-            });
-            quantity = 0.00;
-            $(this)
-                .closest("tr")
-                .find(".qty")
-                .val("0.00");
+        // RESET OVERRIDE IF QTY CHANGES
+        if ($(this).hasClass("qty")) {
+            overridden = false;
+            $row.find(".overrideflag").val("0");
         }
 
-        // AUTO CHANGE PRICE
-        if (quantity >= minqty && minqty > 0) {
-            // Use discount/wholesale price
-            $(this)
-                .closest("tr")
-                .find("input.uprice")
-                .val(numberWithCommas(disprice.toFixed(2)))
-                .css({
-                    "background-color": "#c7520e",
-                    "color": "white",
-                    "border": "2px solid white"
-                });
-
-            price = disprice;
-
-        } else {
-            // Restore original price
-            $(this)
-                .closest("tr")
-                .find("input.uprice")
-                .val(numberWithCommas(origprice.toFixed(2)))
-                .css({
-                    "background-color": "#2e3547",
-                    "color": "white",
-                    "border": "1px solid rgba(255,255,255,0.4)"
-                });
-            price = origprice;
+        // AUTO PRICE ONLY IF NOT OVERRIDDEN
+        if (!overridden) {
+            if (minqty > 0 && quantity >= minqty) {
+                price = disprice;
+                $row.find(".uprice")
+                    .val(numberWithCommas(price.toFixed(2)))
+                    .css({
+                        backgroundColor: "#c7520e",
+                        color: "white"
+                    });
+            } else {
+                price = origprice;
+                $row.find(".uprice")
+                    .val(numberWithCommas(price.toFixed(2)))
+                    .css({
+                        backgroundColor: "#2e3547",
+                        color: "white"
+                    });
+            }
         }
 
         // COMPUTE TOTAL
@@ -1163,6 +1067,7 @@ $(function() {
                     '<input type="hidden" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control vatdesc" prodid="'+prodid+'" name="vatdesc" value="'+vatdesc+'" required disabled>'+
                     '<input type="hidden" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control barcode" prodid="'+prodid+'" name="barcode" value="'+barcode+'" required disabled>'+
                     '<input type="hidden" style="padding:2px;padding-right:17px;text-align:right;color:transparent;text-shadow: 0 0 0 #ffffff;" class="form-control origprice" prodid="'+prodid+'" name="origprice" value="'+uprice+'" required disabled>'+
+                    '<input type="hidden" class="overrideflag" value="0">'+
                 '</td>' +   
 
                 '<td class="totalAmount" width="15%" style="padding:2px;">'+
@@ -1336,31 +1241,7 @@ $(function() {
                     }
                   });
                 }else{    // Valid override key
-                    swal.fire({
-                        title: 'Do you want to OVERRIDE order transaction?',
-                        text: 'You will not be able to revert this process.',
-                        type: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes, Override it!',
-                        cancelButtonText: 'Cancel!',
-                        confirmButtonClass: 'btn btn-outline-success',
-                        cancelButtonClass: 'btn btn-outline-danger',
-                        allowOutsideClick: false,
-                        buttonsStyling: false
-                        }).then(function(result) {
-                        if(result.value) {
-                            $("#modal-override-order").modal('hide');
-                            $("#btn-override").prop('disabled', true);
-                            // Enable all price input control
-                            $(".priceEntry *").prop('disabled', false);
-                        }else if (result.dismiss === Swal.DismissReason.cancel){
-                            $('#tns-override').val('');
-                        }
-                    });
-
-                    // // -----------------------------------------------------------------------
-                    // if(answer["price"] == 1){     // add this line only - price field in users table
-                    //   swal.fire({
+                    // swal.fire({
                     //     title: 'Do you want to OVERRIDE order transaction?',
                     //     text: 'You will not be able to revert this process.',
                     //     type: 'question',
@@ -1371,31 +1252,30 @@ $(function() {
                     //     cancelButtonClass: 'btn btn-outline-danger',
                     //     allowOutsideClick: false,
                     //     buttonsStyling: false
-                    //   }).then(function(result) {
+                    //     }).then(function(result) {
                     //     if(result.value) {
-                    //       $("#modal-override-order").modal('hide');
-                    //       $("#btn-override").prop('disabled', true);
-                    //       // Enable all price input control
-                    //       $(".priceEntry *").prop('disabled', false);
+                            $("#modal-override-order").modal('hide');
+                            $("#btn-override").prop('disabled', true);
+
+                            // Enable price editing
+                            $(".uprice").prop('disabled', false);
+
+                            // Hide cursor but keep input editable
+                            $(".uprice").css({
+                                "caret-color": "transparent",
+                                "color": "#ffffff",
+                                "text-shadow": "0 0 0 #ffffff"
+                            });
+
+                            // Mark rows as manually overridable
+                            $(".overrideflag").val("1");
+
+                            // Focus first price field
+                            $(".uprice:first").focus().select();
                     //     }else if (result.dismiss === Swal.DismissReason.cancel){
-                    //       $('#tns-override').val('');
+                    //         $('#tns-override').val('');
                     //     }
-                    //   });
-                    // }else{    // add this block
-                    //   swal.fire({
-                    //     title: 'You are not authorize to override item price!',
-                    //     type: 'info',
-                    //     confirmButtonText: 'Got it',
-                    //     confirmButtonClass: 'btn btn-outline-success',
-                    //     allowOutsideClick: false,
-                    //     buttonsStyling: false,
-                    //   }).then(function(result){
-                    //     if(result.value) { 
-                    //       $('#tns-override').val('');
-                    //     }
-                    //   });
-                    // }         // add  
-                    // ----------------------------------------------------------------------- 
+                    // });
                 }
               },
               error: function () {
@@ -1405,5 +1285,35 @@ $(function() {
              }
            });
        } // if (override == '')  
-   }
+    }
+
+    // function override_price(){
+    //     swal.fire({
+    //             title: 'Do you want to OVERRIDE order transaction?',
+    //             text: 'You will not be able to revert this process.',
+    //             type: 'question',
+    //             showCancelButton: true,
+    //             confirmButtonText: 'Yes, Override it!',
+    //             cancelButtonText: 'Cancel!',
+    //             confirmButtonClass: 'btn btn-outline-success',
+    //             cancelButtonClass: 'btn btn-outline-danger',
+    //             allowOutsideClick: false,
+    //             buttonsStyling: false
+    //             }).then(function(result) {
+    //             if(result.value) {
+    //                 $("#modal-override-order").modal('hide');
+    //                 $("#btn-override").prop('disabled', true);
+    //                 $(".uprice").prop('disabled', false);
+    //                 $(".uprice").css({
+    //                     "caret-color": "transparent",
+    //                     "color": "#ffffff",
+    //                     "text-shadow": "0 0 0 #ffffff"
+    //                 });
+    //                 $(".overrideflag").val("1");
+    //                 $(".uprice:first").focus().select();
+    //             }else if (result.dismiss === Swal.DismissReason.cancel){
+    //                 $('#tns-override').val('');
+    //             }
+    //         });
+    // }
 });    

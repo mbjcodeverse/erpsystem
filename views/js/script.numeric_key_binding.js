@@ -33,7 +33,15 @@ function _gblOnKeyDown(e) {
     var charCode = (e.which) ? e.which : event.keyCode;
 
     // Period/Dot keypress
-    if (charCode == 190) {
+    // if (charCode == 190) {
+    // if (charCode == 190 || charCode == 110 || e.key === '.') {
+    if (
+        e.key === '.' ||
+        e.code === 'NumpadDecimal' ||
+        charCode === 190 ||
+        charCode === 110
+    ) {
+        // e.preventDefault();
         this.classList.add('dot-enabled');
         this.classList.remove('focused');
         _gblNegative = [];

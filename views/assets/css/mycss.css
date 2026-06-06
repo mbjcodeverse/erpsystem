@@ -432,7 +432,7 @@ table.profile-grid-header thead{
 
 tr.row_selected td {
     background-color: #2e4182 !important;
-    box-shadow: inset 0 0 0 1px #7391f5;
+    /* box-shadow: inset 0 0 0 1px #7391f5; */
 }
 
 /* Shadow and gradient effect on cards */

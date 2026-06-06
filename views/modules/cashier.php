@@ -39,6 +39,8 @@
               <!-- Transaction type (New / Update) -->
               <input type="hidden" name="trans_type" id="trans_type" value="New" required> 
 
+              <input type="hidden" class="overrideflag" value="0">
+
               <!-- ============================================= -->
 
               <div class="col-sm-5 form-group" style="padding: 0px;padding-top:8px;padding-right:8px;margin:0;">
