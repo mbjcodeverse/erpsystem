@@ -35,8 +35,6 @@ session_start();
   <link href="views/assets/css/passtrength.css" rel="stylesheet" type="text/css">
   <!-- /global stylesheets -->
 
-
-
   <!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script> -->
 
 
