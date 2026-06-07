@@ -101,6 +101,7 @@
 
                   <td style="width:18%;font-size: 1.1em;padding-top: 3px;padding-bottom: 3px;text-align: right;padding-right:7px;">VAT Excempt</td>
 
+                  
                   <td style="width:17%;padding: 3px;">
                       <input type="text" style="text-align: right;" class="form-control" id="num-excempt" name="num-excempt" autocomplete="nope" value="0.00" required readonly="true">
                   </td>      
