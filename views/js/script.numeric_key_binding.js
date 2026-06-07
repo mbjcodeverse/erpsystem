@@ -31,7 +31,6 @@ function _gblConcatAmount(positive, negative) {
 // Keydown event listener
 function _gblOnKeyDown(e) {
     var charCode = (e.which) ? e.which : event.keyCode;
-
     // Period/Dot keypress
     // if (charCode == 190) {
     // if (charCode == 190 || charCode == 110 || e.key === '.') {

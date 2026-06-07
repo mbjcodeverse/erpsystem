@@ -62,7 +62,6 @@ function _gblOnKeyDown3dec(e) {
     // if (charCode == 8) {
     //     return e.preventDefault();
     // }
-
     var dotEnabled = this.classList.contains('dot-enabled');
     var focused = this.classList.contains('focused');
 
