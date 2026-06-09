@@ -282,5 +282,114 @@
   </div>
 </div>
 
+<!-- ============== Numeric Keypad ============ -->
+<div id="modal-numeric-keypad" class="modal allow-modal-drag" tabindex="-1">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content" style="background-color:#343f53;">
+
+            <div class="modal-header">
+                <h5 class="modal-title profile-name">
+                    <i class="icon-menu7 mr-2"></i>&nbsp;NUMERIC KEYPAD
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+
+            <div class="h-divider"></div>
+
+            <!-- Display -->
+            <div class="row" style="margin:10px;">
+                <div class="col-12">
+                    <input type="text"
+                           class="form-control border-teal border-1"
+                           id="num-value"
+                           readonly
+                           style="height:80px;font-size:3rem;text-align:right;font-weight:bold;">
+                </div>
+            </div>
+
+            <div class="container-fluid px-3 pb-3">
+
+                <!-- 7 8 9 -->
+                <div class="row mb-2">
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block num-btn" data-value="7"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">7</button>
+                    </div>
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block num-btn" data-value="8"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">8</button>
+                    </div>
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block num-btn" data-value="9"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">9</button>
+                    </div>
+                </div>
+
+                <!-- 4 5 6 -->
+                <div class="row mb-2">
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block num-btn" data-value="4"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">4</button>
+                    </div>
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block num-btn" data-value="5"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">5</button>
+                    </div>
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block num-btn" data-value="6"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">6</button>
+                    </div>
+                </div>
+
+                <!-- 1 2 3 -->
+                <div class="row mb-2">
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block num-btn" data-value="1"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">1</button>
+                    </div>
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block num-btn" data-value="2"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">2</button>
+                    </div>
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block num-btn" data-value="3"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">3</button>
+                    </div>
+                </div>
+
+                <!-- 0 . CLR -->
+                <div class="row mb-2">
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block num-btn" data-value="0"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">0</button>
+                    </div>
+
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-light btn-block" id="btn-dot"
+                            style="height:90px;font-size:2.2rem;font-weight:600;">.</button>
+                    </div>
+
+                    <div class="col-4 px-1">
+                        <button type="button" class="btn btn-warning btn-block" id="btn-clear"
+                            style="height:90px;font-size:1.8rem;font-weight:600;">Clr</button>
+                    </div>
+                </div>
+
+                <!-- SET -->
+                <div class="row">
+                    <div class="col-12 px-1">
+                        <button type="button" class="btn btn-success btn-block"
+                            id="btn-commit-sale"
+                            style="height:90px;font-size:2rem;font-weight:600;">
+                            SET
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script src="views/js/products.js?v=<?php echo filemtime('views/js/products.js'); ?>"></script>

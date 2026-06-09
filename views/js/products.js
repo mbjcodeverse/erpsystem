@@ -83,6 +83,7 @@ $(function () {
     $("#lbl-num-uprice").click(function () {
         $("#num-uprice").val('0.00');
         computeProfit();
+        $("#modal-numeric-keypad").modal("show");
     });
 
     $("#lbl-num-ucost").click(function () {
@@ -462,5 +463,66 @@ $(function () {
         let brandcode = $("#lst-brandcode").val();
         let vatdesc = $("#lst-vatdesc").val();
         window.open("reports/productlist.php?categorycode="+categorycode+"&brandcode="+brandcode+"&vatdesc="+vatdesc, "_blank");
+    });
+
+   // Number buttons
+    $('.num-btn').on('click', function () {
+        let digit = $(this).data('value').toString();
+        let current = $('#num-value').val();
+
+        // Prevent more than 2 decimal places
+        if (current.includes('.')) {
+            let decimals = current.split('.')[1];
+            if (decimals.length >= 2) {
+                return;
+            }
+        }
+
+        // Replace leading zero unless decimal value
+        if (current === '0') {
+            $('#num-value').val(digit);
+            return;
+        }
+        $('#num-value').val(current + digit);
+    });
+
+    // Decimal point
+    $('#btn-dot').on('click', function () {
+        let current = $('#num-value').val();
+        // Start with 0.
+        if (current === '') {
+            $('#num-value').val('0.');
+            return;
+        }
+
+        // Allow only one decimal point
+        if (!current.includes('.')) {
+            $('#num-value').val(current + '.');
+        }
+    });
+
+    // Clear
+    $('#btn-clear').on('click', function () {
+        $('#num-value').val('');
+    });
+
+    // Set
+    $('#btn-commit-sale').on('click', function () {
+        let value = $('#num-value').val().trim();
+        if (value === '') {
+            alert('Please enter an amount.');
+            return;
+        }
+
+        let amount = parseFloat(value);
+        if (isNaN(amount) || amount < 0) {
+            alert('Invalid amount.');
+            return;
+        }
+
+        // Force currency format
+        amount = amount.toFixed(2);
+        $('#num-uprice').val(amount);
+        $('#modal-numeric-keypad').modal('hide');
     });
 });
