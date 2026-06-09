@@ -346,9 +346,13 @@ $(function() {
         let overridden = $row.find(".overrideflag").val() === "1";
 
         // RESET OVERRIDE IF QTY CHANGES
+        // if ($(this).hasClass("qty")) {
+        //     overridden = false;
+        //     $row.find(".overrideflag").val("0");
+        // }
+
         if ($(this).hasClass("qty")) {
-            overridden = false;
-            $row.find(".overrideflag").val("0");
+            overridden = $row.find(".overrideflag").val() === "1";
         }
 
         // AUTO PRICE ONLY IF NOT OVERRIDDEN
