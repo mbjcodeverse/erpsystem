@@ -80,28 +80,28 @@ $(function () {
         $("#sel-brandcode").val('').trigger('change');
     });
 
-    $("#lbl-num-uprice").click(function () {
-        $("#num-uprice").val('0.00');
-        computeProfit();
-        $("#modal-numeric-keypad").modal("show");
-    });
+    // $("#lbl-num-uprice").click(function () {
+    //     $("#num-uprice").val('0.00');
+    //     computeProfit();
+    //     $("#modal-numeric-keypad").modal("show");
+    // });
 
-    $("#lbl-num-ucost").click(function () {
-        $("#num-ucost").val('0.00');
-        computeProfit();
-    });
+    // $("#lbl-num-ucost").click(function () {
+    //     $("#num-ucost").val('0.00');
+    //     computeProfit();
+    // });
 
-    $("#lbl-num-reorder").click(function () {
-        $("#num-reorder").val('0.00');
-    });
+    // $("#lbl-num-reorder").click(function () {
+    //     $("#num-reorder").val('0.00');
+    // });
 
-    $("#lbl-num-disprice").click(function () {
-        $("#num-disprice").val('0.00');
-    });
+    // $("#lbl-num-disprice").click(function () {
+    //     $("#num-disprice").val('0.00');
+    // });
 
-    $("#lbl-num-minqty").click(function () {
-        $("#num-minqty").val('0.00');
-    });
+    // $("#lbl-num-minqty").click(function () {
+    //     $("#num-minqty").val('0.00');
+    // });
 
     // Search options...
     $("#lbl-lst-categorycode").click(function () {
@@ -465,64 +465,112 @@ $(function () {
         window.open("reports/productlist.php?categorycode="+categorycode+"&brandcode="+brandcode+"&vatdesc="+vatdesc, "_blank");
     });
 
-   // Number buttons
+    // =====================================================================
+    // NUMERIC KEYPAD
+    // =====================================================================
+
+    let keypadTarget = null;
+    $("#lbl-num-uprice").click(function () {
+        keypadTarget = "#num-uprice";
+        $("#modal-numeric-keypad").modal("show");
+    });
+
+    $("#lbl-num-ucost").click(function () {
+        keypadTarget = "#num-ucost";
+        $("#modal-numeric-keypad").modal("show");
+    });
+
+    $("#lbl-num-reorder").click(function () {
+        keypadTarget = "#num-reorder";
+        $("#modal-numeric-keypad").modal("show");
+    });
+
+    $("#lbl-num-disprice").click(function () {
+        keypadTarget = "#num-disprice";
+        $("#modal-numeric-keypad").modal("show");
+    });
+
+    $("#lbl-num-minqty").click(function () {
+        keypadTarget = "#num-minqty";
+        $("#modal-numeric-keypad").modal("show");
+    });
+
+    // Load current value into keypad
+    $('#modal-numeric-keypad').on('show.bs.modal', function () {
+        let currentValue = '';
+        if (keypadTarget) {
+            currentValue = $(keypadTarget).val().replace(/,/g, '');
+            // If field contains 0.00, start blank
+            if (currentValue === '0.00' || currentValue === '0' || currentValue === '0.0') {
+                currentValue = '';
+            }
+        }
+        $('#num-value').val(currentValue);
+    });
+
+    // Number buttons
     $('.num-btn').on('click', function () {
         let digit = $(this).data('value').toString();
         let current = $('#num-value').val();
 
-        // Prevent more than 2 decimal places
+        // Limit to 2 decimal places
         if (current.includes('.')) {
             let decimals = current.split('.')[1];
             if (decimals.length >= 2) {
                 return;
             }
         }
-
-        // Replace leading zero unless decimal value
-        if (current === '0') {
-            $('#num-value').val(digit);
-            return;
-        }
         $('#num-value').val(current + digit);
     });
 
-    // Decimal point
+    // Decimal button
     $('#btn-dot').on('click', function () {
         let current = $('#num-value').val();
-        // Start with 0.
         if (current === '') {
             $('#num-value').val('0.');
             return;
         }
-
-        // Allow only one decimal point
         if (!current.includes('.')) {
             $('#num-value').val(current + '.');
         }
     });
 
-    // Clear
+    // Clear button
     $('#btn-clear').on('click', function () {
         $('#num-value').val('');
     });
 
-    // Set
-    $('#btn-commit-sale').on('click', function () {
+    // Backspace button
+    $('#btn-backspace').on('click', function () {
+        let current = $('#num-value').val();
+        $('#num-value').val(current.slice(0, -1));
+    });
+
+    // Save value
+    $('#btn-set-value').on('click', function () {
         let value = $('#num-value').val().trim();
         if (value === '') {
-            alert('Please enter an amount.');
-            return;
+            value = '0';
         }
-
         let amount = parseFloat(value);
-        if (isNaN(amount) || amount < 0) {
-            alert('Invalid amount.');
-            return;
+        if (isNaN(amount)) {
+            amount = 0;
         }
-
-        // Force currency format
         amount = amount.toFixed(2);
-        $('#num-uprice').val(amount);
+        if (keypadTarget) {
+            $(keypadTarget).val(numberWithCommas(amount));
+        }
+        // Recompute profit
+        if (keypadTarget === "#num-uprice" || keypadTarget === "#num-ucost") {
+            computeProfit();
+        }
         $('#modal-numeric-keypad').modal('hide');
+    });
+
+    // Focus target after modal closes
+    $('#modal-numeric-keypad').on('hidden.bs.modal', function () {
+        if (keypadTarget) {
+            $(keypadTarget).trigger('focus');
+        }
     });
 });

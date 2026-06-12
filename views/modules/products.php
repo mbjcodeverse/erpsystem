@@ -18,7 +18,7 @@
                 <div class="card-body">
                     <div class="row">
                         <!-- Category -->
-                        <div class="col-sm-3 form-group">
+                        <div class="col-lg-3 form-group">
                             <label for="sel-categorycode">Category</label>
                             <select data-placeholder="< Select Category >" class="form-control select-search" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" data-fouc id="sel-categorycode" name="sel-categorycode" required>
                                 <option></option>
@@ -32,7 +32,7 @@
                         </div>
 
                         <!-- Brand -->
-                        <div class="col-sm-3 form-group">
+                        <div class="col-lg-3 form-group">
                             <label for="sel-brandcode" id="lbl-sel-brandcode" style="color:aqua;">= &gt; Brand</label>
                             <select data-placeholder="< Select Brand >" class="form-control select-search" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" data-fouc id="sel-brandcode" name="sel-brandcode">
                                 <option></option>
@@ -46,7 +46,7 @@
                         </div>
 
                         <!-- Purchase Item -->
-                        <div class="col-md-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label class="d-block font-weight-semibold">Desc</label>
                             <div class="custom-control custom-checkbox custom-control-inline">
                                 <input type="checkbox" class="custom-control-input" id="chk-purchaseitem" name="chk-purchaseitem" value="1" checked>
@@ -55,7 +55,7 @@
                         </div>                                                                   
 
                         <!-- Status -->
-                        <div class="col-md-1 form-group">
+                        <div class="col-lg-1 form-group">
                             <label class="d-block font-weight-semibold">Status</label>
                             <div class="custom-control custom-checkbox custom-control-inline">
                                 <input type="checkbox" class="custom-control-input" id="chk-isactive" name="chk-isactive" value="1" checked>
@@ -63,10 +63,10 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-1 form-group"></div>            
+                        <div class="col-lg-1 form-group"></div>            
 
                         <!-- Product ID -->
-                        <div class="col-sm-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label for="txt-prodid">Prod ID</label>
                             <input type="text" class="form-control profile-code" id="txt-prodid" name="txt-prodid" autocomplete="nope" required readonly="true">
                         </div>
@@ -74,17 +74,17 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-3 form-group">
+                        <div class="col-lg-3 form-group">
                             <label for="txt-barcode">Bar Code</label>
                             <input type="text" class="form-control" id="txt-barcode" name="txt-barcode" autocomplete="nope">
                         </div> 
                         
-                        <div class="col-sm-4 form-group">
+                        <div class="col-lg-4 form-group">
                             <label for="txt-pdesc">Product Name</label>
                             <input type="text" class="form-control" id="txt-pdesc" name="txt-pdesc" autocomplete="nope" required>
                         </div>
 
-                        <div class="col-sm-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label for="sel-sellunit">( Selling Unit )</label>
                             <select data-placeholder="< Select SKU >" class="form-control select-search" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" data-fouc id="sel-sellunit" name="sel-sellunit" required>
                                 <option></option>
@@ -97,7 +97,7 @@
                             </select>  
                         </div> 
 
-                        <div class="col-sm-1 form-group">
+                        <div class="col-lg-1 form-group">
                             <label for="num-specs">Specs</label>
                             <input type="text" class="form-control" id="num-specs" name="num-specs" autocomplete="nope">
                         </div>
@@ -117,27 +117,27 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label for="num-uprice" id="lbl-num-uprice" style="color:aqua;">= &gt; Unit Price</label>
                             <input type="text" class="form-control border-teal border-1 numeric" id="num-uprice" name="num-uprice" value="0.00" style="font-size: 1em;text-align:right;" readonly required>
                         </div>
 
-                        <div class="col-sm-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label for="num-profit">Profit</label>
                             <input type="text" class="form-control" id="num-profit" name="num-profit" value="0.00" autocomplete="nope" disabled>
                         </div>
 
-                        <div class="col-sm-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label for="num-ucost" id="lbl-num-ucost" style="color:aqua;">= &gt; Unit Cost</label>
                             <input type="text" class="form-control border-teal border-1 numeric" id="num-ucost" name="num-ucost" value="0.00" style="font-size: 1em;text-align:right;" readonly>
                         </div>
 
-                        <div class="col-sm-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label for="txt-abbr">Abbreviation</label>
                             <input type="text" class="form-control" id="txt-abbr" name="txt-abbr" autocomplete="nope">
                         </div>
 
-                        <div class="col-sm-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label for="sel-vatdesc">VAT Desc</label>
                             <select data-placeholder="< Select Desc >" class="form-control select" data-container-css-class="border-secondary" data-dropdown-css-class="border-secondary" data-fouc id="sel-vatdesc" name="sel-vatdesc" required>
                                 <option></option>
@@ -147,24 +147,24 @@
                             </select>
                         </div>
 
-                        <div class="col-sm-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label for="num-reorder" id="lbl-num-reorder" style="color:#b9fcb1;">= &gt; Re-order</label>
                             <input type="text" class="form-control border-teal border-1 numeric" id="num-reorder" name="num-reorder" value="0.00" style="font-size: 1em;text-align:right;" readonly>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label for="num-disprice" id="lbl-num-disprice" style="color:#b9fcb1;">= &gt; Disc Price</label>
                             <input type="text" class="form-control border-teal border-1 numeric" id="num-disprice" name="num-disprice" value="0.00" style="font-size: 1em;text-align:right;" readonly>
                         </div>
 
-                        <div class="col-sm-2 form-group">
+                        <div class="col-lg-2 form-group">
                             <label for="num-minqty" id="lbl-num-minqty" style="color:#b9fcb1;">= &gt; Min Qty</label>
                             <input type="text" class="form-control border-teal border-1 numeric" id="num-minqty" name="num-minqty" value="0.00" style="font-size: 1em;text-align:right;" readonly>
                         </div>
 
-                        <div class="col-sm-8 form-group">
+                        <div class="col-lg-8 form-group">
                             <label for="txt-remarks">Remarks</label>
                             <input type="text" class="form-control" id="txt-remarks" name="txt-remarks" autocomplete="nope">
                         </div>
@@ -379,7 +379,7 @@
                 <div class="row">
                     <div class="col-12 px-1">
                         <button type="button" class="btn btn-success btn-block"
-                            id="btn-commit-sale"
+                            id="btn-set-value"
                             style="height:90px;font-size:2rem;font-weight:600;">
                             SET
                         </button>
