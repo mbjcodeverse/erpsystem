@@ -359,19 +359,28 @@
 
                 <!-- 0 . CLR -->
                 <div class="row mb-2">
-                    <div class="col-4 px-1">
+                    <div class="col-3 px-1">
                         <button type="button" class="btn btn-light btn-block num-btn" data-value="0"
                             style="height:90px;font-size:2.2rem;font-weight:600;">0</button>
                     </div>
 
-                    <div class="col-4 px-1">
+                    <div class="col-3 px-1">
                         <button type="button" class="btn btn-light btn-block" id="btn-dot"
                             style="height:90px;font-size:2.2rem;font-weight:600;">.</button>
                     </div>
 
-                    <div class="col-4 px-1">
+                    <div class="col-3 px-1">
+                        <button type="button" class="btn btn-danger btn-block" id="btn-backspace"
+                            style="height:90px;font-size:2rem;font-weight:600;">
+                            ⌫
+                        </button>
+                    </div>
+
+                    <div class="col-3 px-1">
                         <button type="button" class="btn btn-warning btn-block" id="btn-clear"
-                            style="height:90px;font-size:1.8rem;font-weight:600;">Clr</button>
+                            style="height:90px;font-size:1.6rem;font-weight:600;">
+                            Clr
+                        </button>
                     </div>
                 </div>
 

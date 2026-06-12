@@ -505,7 +505,7 @@ $(function () {
                 currentValue = '';
             }
         }
-        $('#num-value').val(currentValue);
+        $('#num-value').val(formatWithCommas(currentValue));
     });
 
     // Number buttons
@@ -520,18 +520,32 @@ $(function () {
                 return;
             }
         }
-        $('#num-value').val(current + digit);
+        // $('#num-value').val(current + digit);
+        let raw = current.replace(/,/g, '');
+        raw += digit;
+
+        $('#num-value').val(formatWithCommas(raw));
     });
 
     // Decimal button
     $('#btn-dot').on('click', function () {
-        let current = $('#num-value').val();
+        // let current = $('#num-value').val();
+        // if (current === '') {
+        //     $('#num-value').val('0.');
+        //     return;
+        // }
+        // if (!current.includes('.')) {
+        //     $('#num-value').val(current + '.');
+        // }
+        let current = $('#num-value').val().replace(/,/g, '');
+
         if (current === '') {
             $('#num-value').val('0.');
             return;
         }
+
         if (!current.includes('.')) {
-            $('#num-value').val(current + '.');
+            $('#num-value').val(formatWithCommas(current + '.'));
         }
     });
 
@@ -541,14 +555,30 @@ $(function () {
     });
 
     // Backspace button
+    // $('#btn-backspace').on('click', function () {
+    //     let current = $('#num-value').val();
+    //     $('#num-value').val(current.slice(0, -1));
+    // });
+
     $('#btn-backspace').on('click', function () {
-        let current = $('#num-value').val();
-        $('#num-value').val(current.slice(0, -1));
+        let current = $('#num-value').val().replace(/,/g, '');
+
+        if (current.length > 0) {
+            current = current.slice(0, -1);
+        }
+
+        // Remove trailing decimal point
+        if (current.endsWith('.')) {
+            current = current.slice(0, -1);
+        }
+
+        $('#num-value').val(formatWithCommas(current));
     });
 
     // Save value
     $('#btn-set-value').on('click', function () {
-        let value = $('#num-value').val().trim();
+        let value = $('#num-value').val().replace(/,/g, '').trim();
+        // let value = $('#num-value').val().trim();
         if (value === '') {
             value = '0';
         }
@@ -573,4 +603,13 @@ $(function () {
             $(keypadTarget).trigger('focus');
         }
     });
+
+    function formatWithCommas(value) {
+        if (value === '') return '';
+
+        let parts = value.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+        return parts.join('.');
+    }
 });
