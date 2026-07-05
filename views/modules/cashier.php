@@ -306,7 +306,7 @@
 
 <!-- ============== Modal Form - VIEW Sales ============ -->
 <div id="modal-view-sales" class="modal allow-modal-drag" tabindex="-1">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content" style="background-color: #343f53;">
       <div class="modal-header">
         <h5 class="modal-title profile-name"><i class="icon-menu7 mr-2"></i> &nbsp;SALES SEQUENCE</h5>
