@@ -277,6 +277,29 @@ class ModelSale{
 			$stmt = null;									
 		}
 	}
+
+	static public function mdlGenerateSalesSequence($sales_date){
+		$stmt = (new Connection)->connect()->prepare("SELECT s.id,
+																MAX(s.sdate) AS sdate,
+																MAX(s.invno) AS invno,
+																MAX(s.status) AS status,
+																p.prodname,
+																SUM(si.qty) AS qty,
+																AVG(si.uprice) AS uprice,
+																SUM(si.tamount) AS tamount,
+																SUM(si.ucost * ABS(si.qty)) AS cost,
+																SUM((si.uprice - si.ucost) * ABS(si.qty)) AS profit
+															FROM category AS c INNER JOIN products AS p ON c.categorycode = p.categorycode
+																			INNER JOIN salesitems AS si ON p.prodid = si.prodid
+																			INNER JOIN sales AS s ON s.invno = si.invno
+																			WHERE s.sdate = :sales_date
+																			GROUP BY s.id, p.prodname WITH ROLLUP");
+        $stmt->bindParam(":sales_date", $sales_date, PDO::PARAM_STR);
+		$stmt -> execute();
+		return $stmt -> fetchAll();
+		$stmt -> close();
+		$stmt = null;	
+	}
 }
 
 

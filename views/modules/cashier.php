@@ -173,6 +173,8 @@
 
           <button type="button" class="btn btn-lg btn-outline bg-blue-400 text-blue-400 border-blue-400 border-2 btn-float" name="btn-reset" id="btn-reset" data-toggle="modal" data-target="#modal-reset-cashier" style="margin-bottom: 9px;font-size:1.5em;"><i class="icon-spinner9 icon-2x"></i> <span>F9 - Reset</span></button>
 
+          <button type="button" class="btn btn-lg btn-outline bg-orange-400 text-orange-400 border-orange-400 border-2 btn-float" name="btn-reset" id="btn-view" data-toggle="modal" data-target="#modal-view-sales" style="margin-bottom: 9px;font-size:1.5em;"><i class="icon-drawer icon-2x"></i> <span>F10 - View</span></button>
+
           <!-- <button type="button" class="btn btn-lg btn-outline bg-blue-400 text-blue-400 border-blue-400 border-2 btn-float" name="btn-quota" id="btn-quota" style="margin-bottom: 9px;font-size:1.5em;visibility: hidden;"><i class="icon-stackoverflow icon-2x"></i> <span>F9 - Quota</span></button>           -->
         </div>
       </div>
@@ -297,6 +299,22 @@
           <button type="button" class="btn btn-light btn-lg" id="btn-admin-direct-reset" style="font-size: 1.3em;color:lightgreen;"><i class="icon-database-edit2 icon-2x"></i>&nbsp;&nbsp;Initiate Cashier Reset</button>
         </div>
       </div> 
+
+    </div>
+  </div>
+</div>
+
+<!-- ============== Modal Form - VIEW Sales ============ -->
+<div id="modal-view-sales" class="modal allow-modal-drag" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content" style="background-color: #343f53;">
+      <div class="modal-header">
+        <h5 class="modal-title profile-name"><i class="icon-menu7 mr-2"></i> &nbsp;SALES SEQUENCE</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div> 
+
+      <!-- <div class="h-divider"></div> -->
+      <div class="row sales_sequence" id="sales_sequence" style="min-height:62vh;"></div> 
 
     </div>
   </div>

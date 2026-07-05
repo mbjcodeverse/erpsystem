@@ -29,4 +29,9 @@ class ControllerSale{
 		$answer = (new ModelSale)->mdlResetPreview($branchcode, $postedby, $reset_detail, $sale_mode);
 		return $answer;
 	}
+
+	static public function ctrGenerateSalesSequence($sales_date){
+		$answer = (new ModelSale)->mdlGenerateSalesSequence($sales_date);
+		return $answer;
+	}
 }

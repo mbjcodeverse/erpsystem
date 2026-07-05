@@ -164,7 +164,11 @@ $(function() {
             override_price();
         }
     });
-    // ----------------------------------------------------------------------------------
+    // ---------------- RESET SALES ----------------------------------------------------------
+
+    shortcut.add("F9",function() {
+        $('#modal-reset-cashier').modal('show');
+    });
 
     // Filter box FOCUS: show border effect
     $(document).on('focus', 'div.dataTables_filter input', function () {
@@ -1291,33 +1295,122 @@ $(function() {
        } // if (override == '')  
     }
 
-    // function override_price(){
-    //     swal.fire({
-    //             title: 'Do you want to OVERRIDE order transaction?',
-    //             text: 'You will not be able to revert this process.',
-    //             type: 'question',
-    //             showCancelButton: true,
-    //             confirmButtonText: 'Yes, Override it!',
-    //             cancelButtonText: 'Cancel!',
-    //             confirmButtonClass: 'btn btn-outline-success',
-    //             cancelButtonClass: 'btn btn-outline-danger',
-    //             allowOutsideClick: false,
-    //             buttonsStyling: false
-    //             }).then(function(result) {
-    //             if(result.value) {
-    //                 $("#modal-override-order").modal('hide');
-    //                 $("#btn-override").prop('disabled', true);
-    //                 $(".uprice").prop('disabled', false);
-    //                 $(".uprice").css({
-    //                     "caret-color": "transparent",
-    //                     "color": "#ffffff",
-    //                     "text-shadow": "0 0 0 #ffffff"
-    //                 });
-    //                 $(".overrideflag").val("1");
-    //                 $(".uprice:first").focus().select();
-    //             }else if (result.dismiss === Swal.DismissReason.cancel){
-    //                 $('#tns-override').val('');
-    //             }
-    //         });
-    // }
+    // ------------------ View Today Sales ----------------------------
+    let sales_date = moment().format('YYYY-MM-DD');
+    let sales_data = new FormData();
+    sales_data.append("sales_date", sales_date);
+    $.ajax({
+        url: "ajax/sales_sequence.ajax.php",
+        method: "POST",
+        data: sales_data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: "json",
+        success: function(answer) {
+            $(".sales_sequence").empty();
+            var html = [];
+
+            html.push('<div class="table-responsive" style="overflow-y: auto; max-height: 470px;margin-top:10px;">');
+                html.push('<table class="table mx-auto w-auto">');
+                    html.push('<thead>');
+                        html.push('<tr>');
+                            html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Date</th>');
+                            html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Invoice #</th>');
+                            html.push('<th class="table_head_left_fixed" style="padding-top:8px;padding-bottom:8px;">Products</th>');
+                            html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Qty</th>');
+                            html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Price</th>');
+                            html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;">Total</th>');
+                            html.push('<th class="table_head_right_fixed" style="padding-top:8px;padding-bottom:8px;color:lightgreen">Print</th>');
+                        html.push('</tr>');
+                    html.push('</thead>');
+
+                    for(let i = 0; i < answer.length; i++) {
+                        let sales = answer[i];
+
+                        let inv_date = sales.sdate;
+                        let sdate = inv_date.substring(5, 7) + '/' + inv_date.substring(8, 10) + '/' + inv_date.substring(0, 4);
+
+                        let invno = sales.invno;
+                        let status = sales.status;
+                        let prodname = sales.prodname;
+                        let qty = numberWithCommas3dec(sales.qty);
+                        let price = numberWithCommas(sales.uprice);
+                        let tamount = numberWithCommas(sales.tamount);
+                        let cost = numberWithCommas(sales.cost);
+                        let profit = numberWithCommas(sales.profit);
+
+                        if (prodname == null){
+                            invno = '';
+                            pdesc = '';
+                            price = '';
+                            sdate = '';
+                        }else{
+                            if (i == 0){
+                                var prev_invno = sales.invno;
+                                var prev_sdate = sales.sdate;
+                            }else{
+                                var curr_invno = sales.invno;
+                                if (prev_invno == curr_invno){
+                                    invno = '';
+                                }
+                                var prev_invno = curr_invno;
+                                var curr_sdate = sales.sdate;
+                                if (prev_sdate == curr_sdate){
+                                    sdate = '';
+                                }
+                                var prev_sdate = curr_sdate;                    
+                            }                 
+                        }
+
+                        html.push('<tr>');
+                        html.push('<td>'+sdate+'</td>');
+
+                        if (status == 'Void'){
+                            html.push('<td style="color:orange;">'+invno+'</td>');
+                        }else{
+                            html.push('<td>'+invno+'</td>');
+                        }
+
+                        if (i == answer.length - 1){
+                            html.push('<td style="font-size:1.2em;font-weight:bold;">OVERALL AMOUNT</td>');
+                        }else{
+                            if (prodname == null){
+                                html.push('<td style="text-align:right;"></td>');
+                            }else{
+                                html.push('<td>'+prodname+'</td>');
+                            }
+                        }
+                        
+                        if (prodname == null){
+                            html.push('<td style="text-align:right;"></td>');
+                        }else{
+                            html.push('<td style="text-align:right;">'+qty+'</td>');
+                        } 
+
+                        html.push('<td style="text-align:right;">'+price+'</td>');
+
+                        if (prodname == null){
+                            html.push('<td style="font-size:1.2em;font-weight:bold;text-align:right;border-top: 2px solid white;">'+tamount+'</td>');
+                        }else{
+                            html.push('<td style="text-align:right;">'+tamount+'</td>');
+                        }
+
+                        if (invno != ''){
+                            html.push('<td><button style="z-index:2;" type="button" class="btn btn-outline btn-sm bg-orange-400 border-orange-400 text-orange-400 btn-icon rounded-round border-2 ml-2 btnReprintSale" invno="'+invno+'"><i class="icon-printer"></i></button></td>');
+                        }
+
+                        html.push('</tr>'); 
+                    }
+                html.push('</table>');
+            html.push('</div>');
+
+            $('.sales_sequence').html(html.join(''));
+        }
+    });
+
+    $(document).on("click", ".btnReprintSale", function () {
+        let invno = $(this).attr("invno");
+        alert(invno);
+    });
 });    

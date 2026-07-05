@@ -9,6 +9,8 @@ $(function() {
     $('#lst_date_range').data('daterangepicker').setEndDate(moment());
 
     $('#lst_date_range').daterangepicker({
+        startDate: moment(),
+        endDate: moment(),
         ranges:{
           'All'           : [moment('2026-05-26'), moment()],
           'Today'         : [moment(),moment()],
@@ -18,8 +20,11 @@ $(function() {
         }
     });
 
+    // $('#lst_date_range').data('daterangepicker').chosenLabel = 'Today';
+
     $("#lbl-lst-date-range").click(function(){
-        $('#lst_date_range').data('daterangepicker').setStartDate(moment('2026-05-26'));
+        // $('#lst_date_range').data('daterangepicker').setStartDate(moment('2026-05-26'));
+        $('#lst_date_range').data('daterangepicker').setStartDate(moment());
         $('#lst_date_range').data('daterangepicker').setEndDate(moment());
     });
 
